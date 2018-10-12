@@ -1,0 +1,8 @@
+FROM python:alpine3.6
+MAINTAINER legoupyl
+RUN apk update && apk add bash
+RUN pip3 install paho-mqtt
+
+EXPOSE 9501
+WORKDIR  /data/shared/
+#ENTRYPOINT ["python mqtt-db-logger.py "]
