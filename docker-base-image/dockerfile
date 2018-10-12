@@ -1,4 +1,4 @@
-FROM 3.7-alpine3.7
+FROM python:3.7-alpine3.7
 MAINTAINER legoupyl
 RUN apk update && apk add bash
 RUN pip3 install paho-mqtt
