@@ -1,3 +1,7 @@
 base_image="xavfan/brew-base"
+wd="/brewing-controller"
+
+objname="hlt-temp-sensor"
+objscript="$objname"".py"
 docker container rm hlt-temp-sensor
-docker run -ti --name hlt-temp-sensor -v /brewing-controller:/brewing-controller $base_image /brewing-controller/hlt-temp-sensor.py
+docker run -ti --name $objname -w $wd -v $wd:$wd $base_image python $objscript
