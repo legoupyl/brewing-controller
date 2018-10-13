@@ -3,7 +3,7 @@ import max31865
 
 class PT100(SensorPassive):
     # CONFIG PARAMETER & PROPERTIES
-    csPin  =  25
+    csPin  =  13
     RefRest = 430
     misoPin = 9
     mosiPin = 10
