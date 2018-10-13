@@ -4,6 +4,5 @@ RUN apk update
 RUN apk add bash
 RUN pip3 install paho-mqtt
 RUN pip3 install RPi.GPIO
-EXPOSE 9501
 WORKDIR  /data/shared/
-#ENTRYPOINT ["python mqtt-db-logger.py "]
+
