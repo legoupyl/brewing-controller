@@ -1,6 +1,8 @@
 FROM python:3.7-alpine3.7
 MAINTAINER legoupyl
-RUN apk update && apk add bash
+RUN apk update
+RUN apk add bash
+Rin apk add RPi.GPIO
 RUN pip3 install paho-mqtt
 
 EXPOSE 9501
