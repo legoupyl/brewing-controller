@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import max31865
-
+import sys
 class PT100(object):
     # CONFIG PARAMETER & PROPERTIES
     csPin  =  13
@@ -36,4 +36,15 @@ class PT100(object):
 
     def read(self):
         return round(self.max.readTemp(), 2)
+
+
+print ("This is HLT temp sensor script")
+for arg in sys.argv:
+    print (arg)
+sensor=pt100.PT100()
+sensor.init()
+print("Temperature:")
+print (sensor.read())
+
+
 
