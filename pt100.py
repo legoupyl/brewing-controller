@@ -28,12 +28,12 @@ class PT100():
 
       
 
-    def init(self):
+    def init():
 
         # INIT SENSOR
         self.ConfigReg = self.config
         self.max = max31865.max31865(int(self.csPin),int(self.misoPin), int(self.mosiPin), int(self.clkPin), int(self.RefRest), int(self.ConfigReg,16))
 
-    def read(self):
+    def read():
         self.data_received(round(self.max.readTemp(), 2))
 
