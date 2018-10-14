@@ -39,8 +39,8 @@ class PT100(object):
 
 
 print ("This is HLT temp sensor script")
-print (args [0])
-print (args [1])
+print (sys.argv[0])
+print (sys.argv[1])
 sensor=PT100()
 sensor.init()
 print("Temperature:")
