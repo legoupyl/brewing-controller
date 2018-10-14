@@ -1,5 +1,5 @@
 import sys
-import pt100
+from pt100 import PT100
 print ("This is HLT temp sensor script")
 for arg in sys.argv:
     print (arg)
