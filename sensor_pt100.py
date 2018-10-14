@@ -4,9 +4,8 @@ import sys
 class PT100(object):
     # CONFIG PARAMETER & PROPERTIES
     
-   def __init__(self):
+    def __init__(self):
     	self.csPin = []
-    
     csPin=self.csPin
     RefRest = 430
     misoPin = 9
