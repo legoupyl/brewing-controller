@@ -43,7 +43,7 @@ class PT100(object):
 
 sensorName=sys.argv[1]
 csPinValue=sys.argv[2]
-print ("Sensor PT100 Name :" + sensorName
+print ("Sensor PT100 Name :" + sensorName)
 sensor=PT100(csPinValue=csPinValue)
 sensor.init()
 print("Temperature:" + str(sensor.read()))
