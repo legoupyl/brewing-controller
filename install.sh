@@ -8,4 +8,4 @@ objargs="$objname 22"
 
 objscript="$objtype"".py"
 docker container rm hlt-temp-sensor
-docker run -ti --name $objname -w $wd -v $wd:$wd $base_image python $objscript $objargs
+docker run -ti --privileged --name $objname -w $wd -v $wd:$wd $base_image python $objscript $objargs
