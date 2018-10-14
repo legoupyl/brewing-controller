@@ -6,9 +6,8 @@ class PT100(object):
     
    def __init__(self):
     	self.csPin = []
-	csPin=self.csPin
-
-	
+    
+    csPin=self.csPin
     RefRest = 430
     misoPin = 9
     mosiPin = 10
@@ -46,7 +45,7 @@ class PT100(object):
 print ("This is HLT temp sensor script")
 print (sys.argv[1])
 print (sys.argv[2])
-sensor=PT100()
+sensor=PT100(cspin=sys.argv[2])
 sensor.init()
 print("Temperature:")
 print (sensor.read())
