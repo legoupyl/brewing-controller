@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import max31865
 import sys
+import time
 from global_settings import *
 import paho.mqtt.client as mqtt
 class PT100(object):
@@ -65,5 +66,5 @@ print("Temperature:" + sensor_value)
 json_msg="{temperature=" + sensor_value +"}"
 while 1:
 	send_msg (mqtt_brocker,topic,json_msg)
-	sleep (1)
+	time.sleep(1)
     
