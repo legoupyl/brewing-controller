@@ -1,1 +1,1 @@
-mqtt_brocker_address="brocker.legoupyl.com"
+mqtt_brocker="brocker.legoupyl.com"
