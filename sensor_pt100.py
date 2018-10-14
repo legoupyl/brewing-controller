@@ -56,6 +56,7 @@ def send_msg (mqtt_brocker,topic,json_msg):
 sensorName=sys.argv[1]
 csPinValue=sys.argv[2]
 print ("Sensor PT100 Name :" + sensorName)
+print("MQTT_Brocker:" + mqtt_brocker)
 sensor=PT100(csPinValue=csPinValue)
 sensor.init()
 
