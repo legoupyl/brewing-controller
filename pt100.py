@@ -35,5 +35,5 @@ class PT100(object):
         self.max = max31865.max31865(int(self.csPin),int(self.misoPin), int(self.mosiPin), int(self.clkPin), int(self.RefRest), int(self.ConfigReg,16))
 
     def read(self):
-        self.data_received(round(self.max.readTemp(), 2))
+        return round(self.max.readTemp(), 2)
 
