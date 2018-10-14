@@ -63,5 +63,7 @@ sensor.init()
 sensor_value= str(sensor.read())
 print("Temperature:" + sensor_value)
 json_msg="{temperature=" + sensor_value +"}"
-
-send_msg (mqtt_brocker,topic,json_msg)
+while 1:
+	send_msg (mqtt_brocker,topic,json_msg)
+	sleep (1)
+    
