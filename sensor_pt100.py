@@ -3,10 +3,10 @@ import max31865
 import sys
 class PT100(object):
     # CONFIG PARAMETER & PROPERTIES
-    
+    csPin=0
     def __init__(self,csPinValue):
-        self.csPin = csPinValue
-    print ("csPin=" + self.csPin)
+        csPin = csPinValue
+    print ("csPin=" + csPin)
     RefRest = 430
     misoPin = 9
     mosiPin = 10
