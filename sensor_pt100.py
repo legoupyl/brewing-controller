@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import max31865
 import sys
-import global_settings
+from global_settings import *
 import paho.mqtt.client as mqtt
 class PT100(object):
     # CONFIG PARAMETER & PROPERTIES
