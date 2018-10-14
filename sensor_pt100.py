@@ -3,7 +3,12 @@ import max31865
 import sys
 class PT100(object):
     # CONFIG PARAMETER & PROPERTIES
-    csPin  =  13
+    
+   def __init__(self):
+    	self.csPin = []
+	csPin=self.csPin
+
+	
     RefRest = 430
     misoPin = 9
     mosiPin = 10
@@ -26,7 +31,7 @@ class PT100(object):
 		# 0b11000010 = 0xC2     (Continuous auto conversion, 2 or 4 wires at 60 Hz) 
 		#
 
-      
+
 
     def init(self):
 
