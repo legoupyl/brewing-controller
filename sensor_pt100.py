@@ -41,10 +41,9 @@ class PT100(object):
         return round(self.max.readTemp(), 2)
 
 
-print ("This is HLT temp sensor script")
-print (sys.argv[1])
-print (sys.argv[2])
-sensor=PT100(csPinValue=sys.argv[2])
+sensorName=sys.argv[1]
+csPinValue=sys.argv[2]
+print ("Sensor PT100 Name :" + sensorName
+sensor=PT100(csPinValue=csPinValue)
 sensor.init()
-print("Temperature:")
-print (sensor.read())
+print("Temperature:" + str(sensor.read()))
