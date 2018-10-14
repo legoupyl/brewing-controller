@@ -61,10 +61,11 @@ print("MQTT_Brocker:" + mqtt_brocker)
 sensor=PT100(csPinValue=csPinValue)
 sensor.init()
 
-sensor_value= str(sensor.read())
-print("Temperature:" + sensor_value)
-json_msg="{temperature=" + sensor_value +"}"
+
 while 1:
+	sensor_value= str(sensor.read())
+	print("Temperature:" + sensor_value)
+	json_msg="{temperature=" + sensor_value +"}"
 	send_msg (mqtt_brocker,topic,json_msg)
 	time.sleep(1)
     
