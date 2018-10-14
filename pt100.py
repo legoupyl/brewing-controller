@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import max31865
 
-class PT100():
+class PT100(object):
     # CONFIG PARAMETER & PROPERTIES
     csPin  =  13
     RefRest = 430
