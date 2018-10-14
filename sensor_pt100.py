@@ -6,7 +6,7 @@ class PT100(object):
     csPin=0
     def __init__(self,csPinValue):
         csPin = csPinValue
-    print ("csPin=" + csPin)
+    print ("csPin=" + str(csPin))
     RefRest = 430
     misoPin = 9
     mosiPin = 10
