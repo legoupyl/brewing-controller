@@ -3,7 +3,7 @@ wd="/brewing-controller"
 
 objname="hlt-temp-sensor"
 objtype="sensor_pt100"
-objargs="$objname 22"
+objargs="$objname 13"
 
 
 objscript="$objtype"".py"
