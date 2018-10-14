@@ -6,7 +6,7 @@ class PT100(object):
     
     def __init__(self,csPin):
         self.csPin = csPin
-    print ("csPin=" + self.csPin)
+        print ("csPin=" + self.csPin)
     RefRest = 430
     misoPin = 9
     mosiPin = 10
@@ -48,6 +48,3 @@ sensor=PT100(csPin=sys.argv[2])
 sensor.init()
 print("Temperature:")
 print (sensor.read())
-
-
-
