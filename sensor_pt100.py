@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import max31865
 import sys
+import global-settings
 class PT100(object):
     # CONFIG PARAMETER & PROPERTIES
     csPin=0
