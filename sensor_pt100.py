@@ -2,6 +2,7 @@
 import max31865
 import sys
 import global_settings
+import paho.mqtt.client as mqtt
 class PT100(object):
     # CONFIG PARAMETER & PROPERTIES
     csPin=0
@@ -42,9 +43,24 @@ class PT100(object):
         return round(self.max.readTemp(), 2)
 
 
+def send_msg (mqtt_brocker,topic,json_msg):
+	try:
+		client = mqtt.Client()
+		client.connect(mqtt_brocker,1883,60)
+		client.publish(topic, str (json_msg));
+		client.disconnect();
+	except:
+		pass
+
+
 sensorName=sys.argv[1]
 csPinValue=sys.argv[2]
 print ("Sensor PT100 Name :" + sensorName)
 sensor=PT100(csPinValue=csPinValue)
 sensor.init()
-print("Temperature:" + str(sensor.read()))
+
+sensor_value= str(sensor.read())
+print("Temperature:" + sensor_value)
+json_msg="{temperature=" + sensor_value +"}"
+
+send_msg (mqtt_brocker,topic,json_msg)
