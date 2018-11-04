@@ -1,2 +1,5 @@
 mqtt_brocker="brocker.legoupyl.com"
-topic="controller"
+topic="brew-controller"
+controllerName="brew-controller"
+pid_time_frame = 60
+

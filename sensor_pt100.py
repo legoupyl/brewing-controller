@@ -4,6 +4,9 @@ import sys
 import time
 from global_settings import *
 import paho.mqtt.client as mqtt
+from brew_lib import *
+NBsensorRead=5 #number of read for avearge measure
+
 class PT100(object):
     # CONFIG PARAMETER & PROPERTIES
     csPin=0
@@ -32,8 +35,6 @@ class PT100(object):
 		# 0b11000010 = 0xC2     (Continuous auto conversion, 2 or 4 wires at 60 Hz) 
 		#
 
-
-
     def init(self):
 
         # INIT SENSOR
@@ -42,16 +43,6 @@ class PT100(object):
 
     def read(self):
         return round(self.max.readTemp(), 2)
-
-
-def send_msg (mqtt_brocker,topic,json_msg):
-	try:
-		client = mqtt.Client()
-		client.connect(mqtt_brocker,1883,60)
-		client.publish(topic, str (json_msg));
-		client.disconnect();
-	except:
-		pass
 
 
 sensorName=sys.argv[1]
@@ -65,7 +56,7 @@ sensor.init()
 while 1:
 	sensor_value= str(sensor.read())
 	print("Temperature:" + sensor_value)
-	json_msg="{temperature=" + sensor_value +"}"
+	json_msg={"sender":sensorName, "senderType":"sensor","dest"=controllerName,"valueName":"temeprature","value":sensor_value}
 	send_msg (mqtt_brocker,topic,json_msg)
 	time.sleep(1)
     
