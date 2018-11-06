@@ -4,4 +4,4 @@ hlt_temp_controller = controller("hlt_temp_controller","tempCOntroller","hlt_tem
 
 hlt_temp_controller.start
 print (" ca continue")
-time.sleep (10)
+time.sleep (100)
