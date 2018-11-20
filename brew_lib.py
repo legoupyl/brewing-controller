@@ -58,7 +58,7 @@ class sensor:
 		self.msg =msg(name,"controller","measure")
 	def start (self):
 		self.thread = threading.Thread(target=self.run, args=())
-		self.thread.daemon = True
+		self.thread.daemon = False
 		self.is_running = True
 		self.thread.start()  
 	def run(self):
@@ -189,10 +189,15 @@ class msg:
 		print ("hello")
 		json_msg_str= json.dumps (json_msg)
 		log ("SEND",json_msg_str)
-		client = mqtt.Client()
-		client.connect(self.brocker,1883,60)
-		client.publish(self.topic, json_msg_str)
-		client.disconnect()
+		try:
+			client = mqtt.Client()
+			client.connect(self.brocker,1883,60)
+			client.publish(self.topic, json_msg_str)
+			client.disconnect()
+		except:
+			log ("ERR","Unable to send messge")
+			pass
+
 
 def send_msg (sender, recipient, strType, value):
 	json_msg = {"sender" : sender, "recipient" : recipient, "type" : strType, "value" : value }
