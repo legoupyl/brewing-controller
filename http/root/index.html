@@ -12,8 +12,7 @@ Blog: https://iotbytes.wordpress.com/
    <head>
 
   <!-- Latest compiled and minified Bootstrap CSS -->
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-  <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="styles.css">
 
   <!-- Include JQuery library from CDN -->
   <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
@@ -31,7 +30,24 @@ Blog: https://iotbytes.wordpress.com/
     var MQTT_Topic = "controller";
     var MQTT_Subscribe_Topic = "controller";
     var MQTT_Client = "";
+ 
 
+    var hlt_heater_power = 0;
+    var hlt_controller_state = 0;
+    var hlt_temp_setpoint = 65;
+ 
+    var pump1_power = 0;
+
+    var mlt_controller_state = 0;
+    var mlt_heater_power = 0;
+    var mlt_temp_setpoint = 65;
+    
+    var pump2_power = 0;
+ 
+    var bk_controller_state = 0;
+    var bk_heater_power = 0;
+    var bk_heater_state = "off";
+ 
 
     function mqtt_Connect_with_Broker(){
 
@@ -77,22 +93,27 @@ Blog: https://iotbytes.wordpress.com/
     // called when a message arrives
     function onMessageArrived(message) {
      // Set_New_Console_Msg("MQTT Message Recieved. "  + " Message: " + "\"" +  message.payloadString + "\"" + " MQTT Topic: " + "\"" + message.destinationName + "\"" + " QoS Value: " + "\"" + message.qos + "\"");
-      var jsonMsg=JSON.parse (message.payloadString)
-      Set_New_Console_Msg(jsonMsg.type + ":" + jsonMsg.value)
-      switch (jsonMsg.type) {
-        case 'measure':
-          document.getElementById("txt_hlt_temp_sensor").value = jsonMsg.value;
+      var jsonMsg=JSON.parse (message.payloadString);
+      Set_New_Console_Msg(jsonMsg.type + ":" + jsonMsg.value);
+      window[jsonMsg.type](jsonMsg);
+   }
 
-        case 'setpoint':
+    function measure (jsonMsg) {
+        document.getElementById("txt_" + jsonMsg.sender).value = jsonMsg.value;
+ 
+        }
 
-        case 'controllerState':
+    function setpoint (jsonMsg) {
+        document.getElementById("btn_" + jsonMsg.sender).innerText = jsonMsg.value;
+ 
+        }
+    function controllerState (jsonMsg) {
+    
+    }
+    function actorState (jsonMsg) {
+    
+        }
 
-        case 'actorState':
-
-
-
-      }
-    } 
 
 
     // Document Ready Event
@@ -101,8 +122,6 @@ Blog: https://iotbytes.wordpress.com/
       //Generate Random MQTT Clinet ID
       mqtt_Connect_with_Broker(); 
       
-
-
     })
 
 
@@ -142,34 +161,35 @@ Blog: https://iotbytes.wordpress.com/
   <body>
     <div class="main">
     <div class="kettle">
-        <div class="kettle-name">
-            <label class="col-sm-2 control-label">HLT</label>
-      </div>
+        <label class="kettle-title">HLT</label>
+        
 
 
       <div class="temp-sensor">
         <textarea class=temp_display ype="textarea" id="txt_hlt_temp_sensor"></textarea>
-        <button type="button" id="btn_hlt_set_custom" class="btn btn-warning col-sm-2"  onclick="set_setpoint('btn_hlt_set_custom',65);" >65</button>
+        <br/>
+        <button type="button" id="btn_hlt_controller_setpoint_minus" class="boutton1"  onclick="add_to_set_setpoint('btn_hlt_controller_setpoint',-1);" >-</button>
+        <button type="button" id="btn_hlt_controller_setpoint" class="boutton3"  onclick="set_setpoint('btn_hlt_controller_setpoint',65);" >65</button>
+        <button type="button" id="btn_hlt_controller_setpoint_plus" class="boutton1"  onclick="add_to_set_setpoint('btn_hlt_controller_setpoint',1);" >+</button>
+        
       </div>
       <div class="set-point">           
             
-            <button type="button" id="btn_hlt_set_65" class="btn btn-warning col-sm-0"  onclick="add_to_set_setpoint('btn_hlt_set_custom',1);" >+</button>
-            <button type="button" id="btn_hlt_set_66" class="btn btn-warning col-sm-0"  onclick="add_to_set_setpoint('btn_hlt_set_custom',-1);" >-</button>
-            <button type="button" id="btn_hlt_set_65" class="btn btn-warning col-sm-0"  onclick="set_setpoint('btn_hlt_set_custom',65);" >65</button>
-            <button type="button" id="btn_hlt_set_66" class="btn btn-warning col-sm-0"  onclick="set_setpoint('btn_hlt_set_custom',66);" >66</button>
-            <button type="button" id="btn_hlt_set_67" class="btn btn-warning col-sm-0"  onclick="set_setpoint('btn_hlt_set_custom',67);" >67</button>
-            <button type="button" id="btn_hlt_set_77" class="btn btn-warning col-sm-0"  onclick="set_setpoint('btn_hlt_set_custom',77);" >77</button>
+            
+           
+            <button type="button" id="btn_hlt_set_65" class="boutton1"  onclick="set_setpoint('btn_hlt_set_custom',65);" >65</button>
+            <button type="button" id="btn_hlt_set_66" class="boutton1"  onclick="set_setpoint('btn_hlt_set_custom',66);" >66</button>
+            <button type="button" id="btn_hlt_set_67" class="boutton1"  onclick="set_setpoint('btn_hlt_set_custom',67);" >67</button>
+            <button type="button" id="btn_hlt_set_77" class="boutton1"  onclick="set_setpoint('btn_hlt_set_custom',77);" >77</button>
 
       </div>
-      <div class="Controller">
-             <button type="button" id="btn_Clear_Console" class="btn btn-warning col-sm-0"  onclick="clear_Console();" >MAN</button>
+
+      <div class="Actor">
+          <button type="button" id="btn_hlt_heater_on_off" class="boutton1"  onclick="clear_Console();" >Heater off</button>
+          <button type="button" id="btn_hlt_heater_power" class="boutton1"  onclick="clear_Console();" >100%</button>
       </div>
       <div class="Actor">
-          <button type="button" id="btn_hlt_heater_on_off" class="btn btn-warning col-sm-0"  onclick="clear_Console();" >Heater off</button>
-          <button type="button" id="btn_hlt_heater_power" class="btn btn-warning col-sm-0"  onclick="clear_Console();" >100%</button>
-      </div>
-      <div class="Actor">
-          <button type="button" id="Pump1_on_off" class="btn btn-warning col-sm-0"  onclick="clear_Console();" >Pump1</button>
+          <button type="button" id="Pump1_on_off" class="boutton1"  onclick="clear_Console();" >Pump1</button>
       </div>
  
  
@@ -178,55 +198,52 @@ Blog: https://iotbytes.wordpress.com/
 
 
     <div class="kettle">
-      <div class="kettle-name">
-          <label class="col-sm-2 control-label">MLT</label>
-        </div>
+
+          <label class="kettle-title">MLT</label>
 
 
     <div class="temp-sensor">
       <textarea class=temp_display ype="textarea" id="txt_mlt_temp_sensor"></textarea>
-      <button type="button" id="btn_mlt_set_custom" class="btn btn-warning col-sm-2"  onclick="set_setpoint('btn_mlt_set_custom',65);" >65</button>
+      <br/>
+      <button type="button" id="btn_mlt_set_66" class="boutton1"  onclick="add_to_set_setpoint('btn_mlt_set_custom',-1);" >-</button>
+      <button type="button" id="btn_mlt_setpoint" class="boutton3"  onclick="set_setpoint('btn_mlt_setpoint',65);" >65</button>
+      <button type="button" id="btn_mlt_set_65" class="boutton1"  onclick="add_to_set_setpoint('btn_mlt_set_custom',1);" >+</button>
+      <br/>
     </div>
     <div class="set-point">           
           
-          <button type="button" id="btn_mlt_set_65" class="btn btn-warning col-sm-0"  onclick="add_to_set_setpoint('btn_mlt_set_custom',1);" >+</button>
-          <button type="button" id="btn_mlt_set_66" class="btn btn-warning col-sm-0"  onclick="add_to_set_setpoint('btn_mlt_set_custom',-1);" >-</button>
-          <button type="button" id="btn_mlt_set_65" class="btn btn-warning col-sm-0"  onclick="set_setpoint('btn_mlt_set_custom',65);" >65</button>
-          <button type="button" id="btn_mlt_set_66" class="btn btn-warning col-sm-0"  onclick="set_setpoint('btn_mlt_set_custom',66);" >66</button>
-          <button type="button" id="btn_mlt_set_67" class="btn btn-warning col-sm-0"  onclick="set_setpoint('btn_mlt_set_custom',67);" >67</button>
+          
+          
+          <button type="button" id="btn_mlt_set_65" class="boutton1"  onclick="set_setpoint('btn_mlt_set_custom',65);" >65</button>
+          <button type="button" id="btn_mlt_set_66" class="boutton1"  onclick="set_setpoint('btn_mlt_set_custom',66);" >66</button>
+          <button type="button" id="btn_mlt_set_67" class="boutton1"  onclick="set_setpoint('btn_mlt_set_custom',67);" >67</button>
  
 
     </div>
-    <div class="Controller">
-           <button type="button" id="btn_hlt_controller_on_off" class="btn btn-warning col-sm-0"  onclick="clear_Console();" >MAN</button>
+    <div class="Actor">
+        <button type="button" id="btn_hlt_heater_on_off" class="boutton1"  onclick="clear_Console();" >Heater off</button>
+        <button type="button" id="btn_hlt_heater_power" class="boutton1"  onclick="clear_Console();" >100%</button>
     </div>
     <div class="Actor">
-        <button type="button" id="btn_hlt_heater_on_off" class="btn btn-warning col-sm-0"  onclick="clear_Console();" >Heater off</button>
-        <button type="button" id="btn_hlt_heater_power" class="btn btn-warning col-sm-0"  onclick="clear_Console();" >100%</button>
-    </div>
-    <div class="Actor">
-        <button type="button" id="btn_Pump2_on_off" class="btn btn-warning col-sm-0"  onclick="clear_Console();" >Pump2</button>
+        <button type="button" id="btn_Pump2_on_off" class="boutton1"  onclick="clear_Console();" >Pump2</button>
     </div>
 
 
   </div>
 
   <div class="kettle">
-    <div class="kettle-name">
-        <label class="col-sm-2 control-label">BT</label>
-  </div>
-
-
+        <label class="kettle-title">BK</label>
+  
   <div class="temp-sensor">
-    <textarea class=temp_display ype="textarea" id="txt_bt_temp_sensor"></textarea>
+    <textarea class=temp_display ype="textarea" id="txt_bk_temp_sensor"></textarea>
   </div>
 
   <div class="Controller">
-         <button type="button" id="btn_bt_controller_on_off" class="btn btn-warning col-sm-0"  onclick="clear_Console();" >Auto</button>
+         <button type="button" id="btn_bk_controller_on_off" class="boutton1"  onclick="clear_Console();" >Auto</button>
   </div>
   <div class="Actor">
-      <button type="button" id="btn_bt_heater_on_off" class="btn btn-warning col-sm-0"  onclick="clear_Console();" >Heater off</button>
-      <button type="button" id="btn_bt_heater_power" class="btn btn-warning col-sm-0"  onclick="clear_Console();" >100%</button>
+      <button type="button" id="btn_bk_heater_on_off" class="boutton1"  onclick="clear_Console();" >Heater off</button>
+      <button type="button" id="btn_bk_heater_power" class="boutton1"  onclick="clear_Console();" >100%</button>
   </div>
 
 </div>
@@ -236,15 +253,15 @@ Blog: https://iotbytes.wordpress.com/
      
     <form class="form-horizontal">
        <div class="form-group">
-         <label class="col-sm-2 control-label" for="txtAr_Console">Console:</label>
+         <label class="kettle-title" for="txtAr_Console">Console:</label>
          <div class="col-sm-9">
            <textarea ype="textarea" class="form-control" rows="12" cols="100" id="txtAr_Console"></textarea>
          </div>
        </div>
        <div class="form-group">
-        <label class="col-sm-2 control-label" for="btn_Clear_Console"></label>
+        <label class="kettle-title" for="btn_Clear_Console"></label>
          <div class="col-sm-4">
-           <button type="button" id="btn_Clear_Console" class="btn btn-warning col-sm-4"  onclick="clear_Console();" >Clear Console</button>
+           <button type="button" id="btn_Clear_Console" class="boutton1"  onclick="clear_Console();" >Clear Console</button>
          </div>
        </div>
      </form>
