@@ -21,7 +21,7 @@ RUN apt-get -y install RPI.GPIO
 RUN apt-get -y install i2c-tools
 RUN apt-get -y install python-smbus
 
-VOLUME ["/data/brewing-controller"]
+sudo apt-get -y install python3-pip
 
 # Define working directory
 WORKDIR /data/brewing-controller
