@@ -30,7 +30,7 @@ WORKDIR /data/brewing-controller
 # Define default command
 CMD  ["bin/sh"]
 
-## to run : docker run -d -p 5000:5000 --privileged --cap-add SYS_RAWIO --device /dev/mem --restart unless-stopped -v /data/brewing-controller --name test xavfan/brewing controller
+## to run : docker run -d --privileged --cap-add SYS_RAWIO --device /dev/mem --restart unless-stopped -v /data/brewing-controller --name lcd xavfan/brew-base
 
 
 
