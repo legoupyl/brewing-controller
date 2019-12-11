@@ -1,6 +1,6 @@
 from PIL import Image, ImageTk 
 import tkinter as tk 
-
+from Tkinter import *
 
 mlt_temp= 66
 bk_temp= 95
