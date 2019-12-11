@@ -11,7 +11,7 @@ tkimage = ImageTk.PhotoImage(img)
 
 
 w = tk.Label(root, text="Hello Tkinter!")
-w.pack()
+#w.pack()
 
 mlt_temp_label = tk.Label(root, text=mlt_temp)
 
