@@ -2,7 +2,7 @@ from PIL import Image, ImageTk
 import tkinter as tk 
 
 root = tk.Tk()
-tk.attributes("-fullscreen", True) 
+root.attributes('-zoomed', True)
 img = Image.open("brasserie.bmp")
 tkimage = ImageTk.PhotoImage(img)
 tk.Label(root, image=tkimage).pack()
