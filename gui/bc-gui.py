@@ -8,7 +8,10 @@ root = tk.Tk()
 root.attributes('-zoomed', True)
 img = Image.open("brasserie.bmp")
 tkimage = ImageTk.PhotoImage(img)
-tk.Label(root, image=tkimage).pack()
+
+
+w = tk.Label(root, text="Hello Tkinter!")
+w.pack()
 
 mlt_temp_label = Label(root, text=mlt_temp)
 
