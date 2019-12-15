@@ -1,12 +1,19 @@
 import threading
-from tkinter import *
+
+import tkinter as tk
 import time
 import sys
 
 
 
-
-
+FontSize1=100
+FontSize2=80
+y1=50
+y2=200
+y3= 400
+xMLT=50
+xBK=500
+xHLT= 800
 
 # Set variable
 MLT_temp = 60.0
@@ -19,34 +26,28 @@ HLT_temp_setpoint = 69.0
 
 def gui():
 
-    app = Tk()
-
-    FontSize1=100
-    FontSize2=80
-    y1=150
-    y2=400
-    #img = Image.open("brasserie.bmp")
-
-    app.geometry("1024x563")
-    #app.resizable(width=False, height=False)
-
-    img = PhotoImage(master=app,file = 'brasserie.png')
-    canvas = Canvas(app, width=1024, height=563)
-    canvas.create_image(512, 282, image=img)
-    canvas.grid()
+        
+    root = tk.Tk()
 
 
-    MLT_temp_txt=canvas.create_text(170, y1, font=('batmfa.ttf', FontSize1), text=MLT_temp , fill='orange')
-  
+    image1 = tk.PhotoImage(file='brasserie.png')
+    w = image1.width()
+    h = image1.height()
+    root.geometry("%dx%d+0+0" % (w, h))
 
-    BK_temp_txt=canvas.create_text(512, y1, font=('batmfa.ttf', FontSize1), text=BK_temp, fill='orange')
-    BK_temp_setpoint_txt=canvas.create_text(512, y2, font=('batmfa.ttf', FontSize2), text=BK_power_setpoint, fill='white')
+    panel1 = tk.Label(root, image=image1)
+    panel1.pack(side='top', fill='both', expand='yes')
 
-    HLT_temp_txt=canvas.create_text(870, y1, font=('batmfa.ttf', FontSize1), text=HLT_temp, fill='orange')
-    HLT_temp_setpoint_txt=canvas.create_text(870, y2, font=('batmfa.ttf', FontSize2), text=HLT_temp_setpoint, fill='white')
+    MLT_temp_label = tk.Label(panel1, text=MLT_temp,bg='black',font=("Helvetica", FontSize1),width=0,height=0,fg='orange')
+    MLT_temp_label.place (x=xMLT,y=y1 )
 
-    
-    app.mainloop ()
+    while True:
+        time.sleep (1)
+        MLT_temp_label.config (text=round (MLT_temp,1))
+        MLT_temp_label.update()
+
+
+
 
 
 def get_MLT_temp():
