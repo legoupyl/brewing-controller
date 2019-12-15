@@ -47,7 +47,7 @@ HLT_encoder.writeMin(50)
 HLT_encoder.writeStep(1)
 HLT_encoder.writeInterruptConfig(0xff)
 
-def HLT_encoder_fnc:
+def HLT_encoder_fnc():
     global HLT_temp_setpoint
     HLT_temp_setpoint = 50
     while True:
