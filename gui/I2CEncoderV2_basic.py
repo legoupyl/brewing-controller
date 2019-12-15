@@ -17,7 +17,7 @@ encoder.begin(encconfig)
 
 
 encoder.writeCounter(0)
-encoder.writeMax(100.0)
+encoder.writeMax(100)
 encoder.writeMin(0)
 encoder.writeStep(1)
 encoder.writeInterruptConfig(0xff)
