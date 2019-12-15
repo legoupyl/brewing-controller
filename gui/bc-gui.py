@@ -98,13 +98,16 @@ def gui():
 
 
     while True:
-        time.sleep (1)
+        time.sleep (0.1)
         MLT_temp_label.config (text=round (MLT_temp,1))
         MLT_temp_label.update()
         BK_temp_label.config (text=round (BK_temp,1))
         BK_temp_label.update()
         HLT_temp_label.config (text=round (HLT_temp,1))
         HLT_temp_label.update()
+
+        HLT_temp_setpoint_label.config (text=HLT_temp_setpoint)
+        HLT_temp_setpoint_label.update()
 
 
 
