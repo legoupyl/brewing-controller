@@ -1,9 +1,16 @@
 import threading
-
 import tkinter as tk
 import time
 import sys
+import smbus 
+from gpiozero import Button 
+import i2cEncoderLibV2
 
+bus=smbus.SMBus(1)
+
+
+BK_encoder_int_pin= Button(8)
+HLT_encoder_int_pin = Button(4)
 
 
 FontSize1=100
@@ -26,7 +33,40 @@ BK_temp = 62.1
 BK_power_setpoint = 85
 
 HLT_temp= 70.1
-HLT_temp_setpoint = 69.0
+
+
+
+# Init rotary encoders 
+encconfig=(i2cEncoderLibV2.INT_DATA | i2cEncoderLibV2.WRAP_ENABLE | i2cEncoderLibV2.DIRE_RIGHT | i2cEncoderLibV2.IPUP_ENABLE | i2cEncoderLibV2.RMOD_X1 | i2cEncoderLibV2.RGB_ENCODER)
+
+HLT_encoder = i2cEncoderLibV2.i2cEncoderLibV2(bus,0x03)
+HLT_encoder.begin(encconfig)
+HLT_encoder.writeCounter(50)
+HLT_encoder.writeMax(90)
+HLT_encoder.writeMin(50)
+HLT_encoder.writeStep(1)
+HLT_encoder.writeInterruptConfig(0xff)
+
+def HLT_encoder_fnc:
+    global HLT_temp_setpoint
+    HLT_temp_setpoint = 50
+    while True:
+	if int_pin.is_pressed :
+		encoder.updateStatus()
+		if HLT_encoder.readStatus(i2cEncoderLibV2.RINC) == True :
+			print ('Increment: %d' % (HLT_encoder.readCounter32())) 
+		elif HLT_encoder.readStatus(i2cEncoderLibV2.RDEC) == True :
+			print ('Decrement:  %d' % (HLT_encoder.readCounter32())) 
+		if HLT_encoder.readStatus(i2cEncoderLibV2.RMAX) == True :
+			print ('Max!') 
+		elif HLT_encoder.readStatus(i2cEncoderLibV2.RMIN) == True :
+			print ('Min!') 
+        
+        HLT_temp_setpoint = encoder.readCounter32()
+
+
+
+
 
 def gui():
 
@@ -95,6 +135,11 @@ def get_MLT_temp():
 MLT_temp_thread = threading.Thread(target=get_MLT_temp)
 MLT_temp_thread.daemon=True
 MLT_temp_thread.start()
+
+
+HLT_encoder_thread = threading.Thread(target=HLT_encoder_fnc)
+HLT_encoder_thread.daemon=True
+HLT_encoder_thread.start()
 
 gui_thread = threading.Thread(target=gui)
 gui_thread.start()
