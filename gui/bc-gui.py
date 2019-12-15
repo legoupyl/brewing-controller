@@ -41,10 +41,10 @@ encconfig=(i2cEncoderLibV2.INT_DATA | i2cEncoderLibV2.WRAP_ENABLE | i2cEncoderLi
 
 HLT_encoder = i2cEncoderLibV2.i2cEncoderLibV2(bus,0x03)
 HLT_encoder.begin(encconfig)
-HLT_encoder.writeCounter(50)
+HLT_encoder.writeCounter(65)
 HLT_encoder.writeMax(90)
 HLT_encoder.writeMin(50)
-HLT_encoder.writeStep(0.5)
+HLT_encoder.writeStep(1)
 HLT_encoder.writeInterruptConfig(0xff)
 
 def HLT_encoder_fnc():
