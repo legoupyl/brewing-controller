@@ -44,7 +44,7 @@ HLT_encoder.begin(encconfig)
 HLT_encoder.writeCounter(50)
 HLT_encoder.writeMax(90)
 HLT_encoder.writeMin(50)
-HLT_encoder.writeStep(1)
+HLT_encoder.writeStep(0.5)
 HLT_encoder.writeInterruptConfig(0xff)
 
 def HLT_encoder_fnc():
@@ -106,7 +106,7 @@ def gui():
         HLT_temp_label.config (text=round (HLT_temp,1))
         HLT_temp_label.update()
 
-        HLT_temp_setpoint_label.config (text=HLT_temp_setpoint)
+        HLT_temp_setpoint_label.config (text=round (HLT_temp_setpoint,1))
         HLT_temp_setpoint_label.update()
 
 
