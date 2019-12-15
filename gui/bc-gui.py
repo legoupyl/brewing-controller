@@ -51,7 +51,7 @@ def HLT_encoder_fnc():
     global HLT_temp_setpoint
     HLT_temp_setpoint = 50
     while True:
-        if int_pin.is_pressed :
+        if HLT_encoder_int_pin.is_pressed :
             encoder.updateStatus()
             if HLT_encoder.readStatus(i2cEncoderLibV2.RINC) == True :
                 print ('Increment: %d' % (HLT_encoder.readCounter32())) 
