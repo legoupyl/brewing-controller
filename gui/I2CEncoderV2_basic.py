@@ -1,15 +1,15 @@
-import smbus2
-##import smbus 
+#import smbus2
+import smbus 
 from gpiozero import Button 
 from time import sleep
 import i2cEncoderLibV2
 
-bus=smbus2.SMBus(1)
+bus=smbus.SMBus(1)
 ##bus=smbus.SMBus(1)
 int_pin = Button(4)
 
 
-encoder = i2cEncoderLibV2.i2cEncoderLibV2(bus,0x61)
+encoder = i2cEncoderLibV2.i2cEncoderLibV2(bus,0x03)
 
 
 encconfig=(i2cEncoderLibV2.INT_DATA | i2cEncoderLibV2.WRAP_ENABLE | i2cEncoderLibV2.DIRE_RIGHT | i2cEncoderLibV2.IPUP_ENABLE | i2cEncoderLibV2.RMOD_X1 | i2cEncoderLibV2.RGB_ENCODER)
