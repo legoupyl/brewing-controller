@@ -51,18 +51,18 @@ def HLT_encoder_fnc():
     global HLT_temp_setpoint
     HLT_temp_setpoint = 50
     while True:
-	if int_pin.is_pressed :
-		encoder.updateStatus()
-		if HLT_encoder.readStatus(i2cEncoderLibV2.RINC) == True :
-			print ('Increment: %d' % (HLT_encoder.readCounter32())) 
-		elif HLT_encoder.readStatus(i2cEncoderLibV2.RDEC) == True :
-			print ('Decrement:  %d' % (HLT_encoder.readCounter32())) 
-		if HLT_encoder.readStatus(i2cEncoderLibV2.RMAX) == True :
-			print ('Max!') 
-		elif HLT_encoder.readStatus(i2cEncoderLibV2.RMIN) == True :
-			print ('Min!') 
-        
-        HLT_temp_setpoint = encoder.readCounter32()
+        if int_pin.is_pressed :
+            encoder.updateStatus()
+            if HLT_encoder.readStatus(i2cEncoderLibV2.RINC) == True :
+                print ('Increment: %d' % (HLT_encoder.readCounter32())) 
+            elif HLT_encoder.readStatus(i2cEncoderLibV2.RDEC) == True :
+                print ('Decrement:  %d' % (HLT_encoder.readCounter32())) 
+            if HLT_encoder.readStatus(i2cEncoderLibV2.RMAX) == True :
+                print ('Max!') 
+            elif HLT_encoder.readStatus(i2cEncoderLibV2.RMIN) == True :
+                print ('Min!') 
+            
+            HLT_temp_setpoint = encoder.readCounter32()
 
 
 
