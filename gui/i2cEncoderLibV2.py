@@ -157,7 +157,7 @@ class i2cEncoderLibV2:
 
 		if (self.stat == 0):
 			self.stat2 = 0
-			return False
+		return False
   
 		if (self.stat & INT2) != 0 :
 			self.stat2 = self.readEncoder8(REG_I2STATUS)
@@ -461,10 +461,12 @@ class i2cEncoderLibV2:
 		
 # Send to the encoder 3 byte #
 	def writeEncoder24(self,add, value):
-		data=[0,0,0,0]
+		data=[0,0,0]
 		s = struct.pack('>i',value)
 		data = struct.unpack('BBB',s[1:4])
-		self.i2cbus.write_i2c_block_data(self.i2cadd, add, data)
+		self.i2cbus.write_byte_data(self.i2cadd, add, data[0])
+		self.i2cbus.write_byte_data(self.i2cadd, add+1, data[1])
+		self.i2cbus.write_byte_data(self.i2cadd, add+2, data[2])
 		return -1
 		
 # Send to the encoder 4 byte #
@@ -472,41 +474,54 @@ class i2cEncoderLibV2:
 		data=[0,0,0,0]
 		s = struct.pack('>i',value)
 		data = struct.unpack('BBBB',s)
-		self.i2cbus.write_i2c_block_data(self.i2cadd, add, data)
+		self.i2cbus.write_byte_data(self.i2cadd, add, data[0])
+		self.i2cbus.write_byte_data(self.i2cadd, add+1, data[1])
+		self.i2cbus.write_byte_data(self.i2cadd, add+2, data[2])
+		self.i2cbus.write_byte_data(self.i2cadd, add+3, data[3])
 		return -1
 		
 # Send to the encoder a float number #
 	def writeEncoderFloat(self,add, value):
 		data= [0,0,0,0]
-		s = struct.pack('>f',value)
+		s = struct.pack('f',value)
 		data = struct.unpack('BBBB',s)
-		self.i2cbus.write_i2c_block_data(self.i2cadd, add, data)
+		self.i2cbus.write_byte_data(self.i2cadd, add, data[3])
+		self.i2cbus.write_byte_data(self.i2cadd, add+1, data[2])
+		self.i2cbus.write_byte_data(self.i2cadd, add+2, data[1])
+		self.i2cbus.write_byte_data(self.i2cadd, add+3, data[0])	
 		return -1
 		
 # read the encoder 1 byte #	 
 	def readEncoder8(self,add):
 		data = [0]
 		data[0] = self.i2cbus.read_byte_data(self.i2cadd, add)	
-		value = struct.unpack(">b", bytearray(data))
+		value = struct.unpack("b", bytearray(data))
 		return value[0]
 		
 # read the encoder 2 byte #	 		
 	def readEncoder16(self,add):
 		data = [0,0]
-		data=self.i2cbus.read_i2c_block_data(self.i2cadd, add, 2)
-		value = struct.unpack(">h", bytearray(data))
+		data[1]= self.i2cbus.read_byte_data(self.i2cadd, add+0)
+		data[0]= self.i2cbus.read_byte_data(self.i2cadd, add+1)
+		value = struct.unpack("h", bytearray(data))
 		return value[0] 
 	
 # read the encoder 4 byte #	 		
 	def readEncoder32(self, add):
 		data = [0,0,0,0]
-		data=self.i2cbus.read_i2c_block_data(self.i2cadd, add, 4)
-		value = struct.unpack(">i", bytearray(data))
+		data[3]= self.i2cbus.read_byte_data(self.i2cadd, add)
+		data[2]= self.i2cbus.read_byte_data(self.i2cadd, add+1)
+		data[1]= self.i2cbus.read_byte_data(self.i2cadd, add+2)
+		data[0]= self.i2cbus.read_byte_data(self.i2cadd, add+3)
+		value = struct.unpack("i", bytearray(data))
 		return value[0]
 		
 # read the encoder float#	 		
 	def readEncoderFloat(self,add):
 		data = [0,0,0,0]
-		data=self.i2cbus.read_i2c_block_data(self.i2cadd, add, 4)
-		value = struct.unpack(">f", bytearray(data)) 
+		data[3]= self.i2cbus.read_byte_data(self.i2cadd, add)
+		data[2]= self.i2cbus.read_byte_data(self.i2cadd, add+1)
+		data[1]= self.i2cbus.read_byte_data(self.i2cadd, add+2)
+		data[0]= self.i2cbus.read_byte_data(self.i2cadd, add+3)
+		value = struct.unpack("f", bytearray(data)) 
 		return value[0]
