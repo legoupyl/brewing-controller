@@ -5,6 +5,9 @@ import sys
 import smbus 
 from gpiozero import Button 
 import i2cEncoderLibV2
+import max31865
+from simple_pid import PID
+
 
 bus=smbus.SMBus(1)
 
@@ -26,13 +29,61 @@ xHLT= 730
 xOffset = 20
 
 
-# Set variable
+# Set wiring variable
+
+MLT_pt100_cspin = 10
+BK_pt100_cspin = 11
+HLT_pt100_cspin = 12
+
+
+
 MLT_temp = 60.0
 
 BK_temp = 62.1
 BK_power_setpoint = 85
 
 HLT_temp= 70.1
+
+
+
+
+class PT100(object):
+    # CONFIG PARAMETER & PROPERTIES
+    csPin=0
+    def __init__(self,csPinValue):
+        csPin = csPinValue
+    print ("csPin=" + str(csPin))
+    RefRest = 430
+    misoPin = 9
+    mosiPin = 10
+    clkPin = 11
+    config = "0xA2" #ConfigText = Property.Select("Conversion Mode & Wires", options=["[0xB2] - 3 Wires Manual","[0xD2] - 3 Wires Auto","[0xA2] - 2 or 4 Wires Manual","[0xC2] - 2 or 4 Wires Auto"], description="Choose beetween 2, 3 or 4 wire PT100 & the Conversion mode at 60 Hz beetween Manual or Continuous Auto")
+		#
+		# Config Register
+		# ---------------
+		# bit 7: Vbias -> 1 (ON), 0 (OFF)
+		# bit 6: Conversion Mode -> 0 (MANUAL), 1 (AUTO) !!don't change the noch fequency 60Hz when auto
+		# bit5: 1-shot ->1 (ON)
+		# bit4: 3-wire select -> 1 (3 wires config), 0 (2 or 4 wires)
+		# bits 3-2: fault detection cycle -> 0 (none)
+		# bit 1: fault status clear -> 1 (clear any fault)
+		# bit 0: 50/60 Hz filter select -> 0 (60Hz - Faster converson), 1 (50Hz)
+		#
+		# 0b10110010 = 0xB2     (Manual conversion, 3 wires at 60Hz)
+		# 0b10100010 = 0xA2     (Manual conversion, 2 or 4 wires at 60Hz)
+		# 0b11010010 = 0xD2     (Continuous auto conversion, 3 wires at 60 Hz) 
+		# 0b11000010 = 0xC2     (Continuous auto conversion, 2 or 4 wires at 60 Hz) 
+		#
+
+    def init(self):
+
+        # INIT SENSOR
+        self.ConfigReg = self.config
+        self.max = max31865.max31865(int(self.csPin),int(self.misoPin), int(self.mosiPin), int(self.clkPin), int(self.RefRest), int(self.ConfigReg,16))
+
+    def read(self):
+        return round(self.max.readTemp(), 2)
+
 
 
 
@@ -64,6 +115,55 @@ def HLT_encoder_fnc():
             
             HLT_temp_setpoint = HLT_encoder.readCounter32()
 
+
+
+
+class HLT_controller(object):
+    def __init__(self):
+        running =False
+        freq=1
+        gpio_num=21
+        PID.__init__ (self,Kp=112.344665712, Ki=0.840663751375, Kd=12.5112685197)
+    def stop(self):
+        running = False
+    def start(self):
+        running = True
+        while running == True:
+            power = PID.__call__ (self,HLT_temp))
+            T=1 / self.freq
+			TimeOn= round (T * (self.power / 100),4)
+			TimeOff = T - TimeOn
+			if not (self.power==0):
+				GPIO.output(self.gpio_num, GPIO.HIGH)
+				time.sleep (TimeOn)
+			if not (self.power == 100):
+				GPIO.output(self.gpio_num, GPIO.LOW)
+				time.sleep (TimeOff)
+        GPIO.output(self.gpio_num, GPIO.LOW)
+
+
+
+class BK_controller(object):
+    def __init__(self):
+        running =False
+        freq=1
+        gpio_num=22
+        power=100
+    def stop(self):
+        running = False
+    def start(self):
+        running = True
+        while running == True:
+            T=1 / self.freq
+			TimeOn= round (T * (self.power / 100),4)
+			TimeOff = T - TimeOn
+			if not (self.power==0):
+				GPIO.output(self.gpio_num, GPIO.HIGH)
+				time.sleep (TimeOn)
+			if not (self.power == 100):
+				GPIO.output(self.gpio_num, GPIO.LOW)
+				time.sleep (TimeOff)
+        GPIO.output(self.gpio_num, GPIO.LOW)
 
 
 
@@ -112,30 +212,23 @@ def gui():
 
 
 
-def get_MLT_temp():
+def get_temp():
     global MLT_temp
     global BK_temp
     global HLT_temp
+    MLT_pt100=PT100(csPinValue=MLT_pt100_cspin)
+    BK_pt100=PT100(csPinValue=BK_pt100_cspin)
+    HLT_pt100=PT100(csPinValue=MLT_pt100_cspin)
+    MLT_pt100.init()
+    BK_pt100.init()
+    HLT_pt100.init()
     while True:
-        print (MLT_temp)
+        MLT_temp=MLT_pt100.read()
+        BK_temp=BK_pt100.read()
+        HLT_temp=HLT_pt100.read()
         time.sleep(1)
-        if  MLT_temp < 70:
-            MLT_temp=MLT_temp+0.1
-            BK_temp=BK_temp+0.1
-            HLT_temp=HLT_temp+0.1
 
-
-        else:
-            MLT_temp = 60.0        
-            exit()
-
-
-
-
-
-
-
-MLT_temp_thread = threading.Thread(target=get_MLT_temp)
+MLT_temp_thread = threading.Thread(target=get_temp)
 MLT_temp_thread.daemon=True
 MLT_temp_thread.start()
 
