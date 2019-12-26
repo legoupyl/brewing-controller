@@ -7,7 +7,9 @@ from gpiozero import Button
 import i2cEncoderLibV2
 import max31865
 from simple_pid import PID
+import atexit
 from RPi import GPIO
+
 GPIO.setmode(GPIO.BCM)
 
 bus=smbus.SMBus(1)
@@ -54,6 +56,7 @@ BK_power_setpoint = 50
 
 
 def theEnd():
+    Print ("Goodbye !")
     GPIO.output(self.BK_heater_cspin, GPIO.LOW)
     GPIO.output(self.HLT_heater_cspin, GPIO.LOW)
 
@@ -153,6 +156,7 @@ class BK_controller_class(object):
         self.power =BK_power_setpoint
         self.freq=1
         self.gpio_num=BK_heater_cspin
+        
  
     def stop(self):
         self.running = False
@@ -190,16 +194,22 @@ class HLT_controller_class(object):
         self.running =False
         self.freq=1
         self.gpio_num=HLT_heater_cspin
-        self.power=50
+        self.power=0
+        self.PID=PID.__init__ (self,Kp=112.344665712, Ki=0.840663751375, Kd=12.5112685197)
+        self.PID.selfoutput_limits = (0, 100)
+        self.PID.sample_time=5
     def stop(self):
         self.running = False
     def start(self):
         self.running = True
         GPIO.setup(self.gpio_num, GPIO.OUT)
+        
         while self.running == True:
             T=1 / self.freq
             TimeOn= round (T * (self.power / 100),4)
             TimeOff = T - TimeOn
+            self.PID.setpoint=HLT_temp_setpoint
+            self.power = self.PID.__call__ (self,HLT_temp)
             if not (self.power==0):
                 GPIO.output(self.gpio_num, GPIO.HIGH)
                 time.sleep (TimeOn)
@@ -217,15 +227,12 @@ class HLT_controller_class(object):
             self.stop()
 
 
-
-
-
 def gui():
 
     root = tk.Tk()
 
 
-    image1 = tk.PhotoImage(file='brasserie.png')
+    image1 = tk.PhotoImage(file='Background.png')
     w = image1.width()
     h = image1.height()
     root.geometry("%dx%d+0+0" % (w, h))
@@ -303,6 +310,10 @@ def get_temp():
         HLT_temp=HLT_pt100.read()
         print ("HLT TEMP :" + str (HLT_temp))
         time.sleep(1)
+
+
+atexit.register(theEnd)
+
 
 get_temp_thread = threading.Thread(target=get_temp)
 get_temp_thread.daemon=True
