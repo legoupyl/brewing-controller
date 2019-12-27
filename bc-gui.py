@@ -56,7 +56,7 @@ BK_power_setpoint = 50
 
 
 def theEnd():
-    Print ("Goodbye !")
+    print ("Goodbye !")
     GPIO.output(self.BK_heater_cspin, GPIO.LOW)
     GPIO.output(self.HLT_heater_cspin, GPIO.LOW)
 
@@ -160,7 +160,7 @@ class BK_controller_class(object):
  
     def stop(self):
         self.running = False
-    def start(self):
+    def run(self):
         self.running = True
         GPIO.setup(self.gpio_num, GPIO.OUT)
         while (self.running == True):
@@ -176,31 +176,35 @@ class BK_controller_class(object):
                 GPIO.output(self.gpio_num, GPIO.LOW)
                 time.sleep (TimeOff)
         GPIO.output(self.gpio_num, GPIO.LOW)
-
-    def toggle(self):
-        print ("start BK controller toggle" )
-        if self.running == False:
+   
+    def start(self):
+         if self.running == False:
             BK_heater_thread = threading.Thread(target=self.start)
             BK_heater_thread.daemon=True
             BK_heater_thread.start()
- 
+    def toggle(self):
+        print ("start BK controller toggle" )
+        if self.running == False:
             print ("Starting BK controller" )
+            self.start()
         else:
-            self.stop()
             print ("Stoping BK controller" )
-        
+            self.stop()
+
 class HLT_controller_class(object):
     def __init__(self):
         self.running =False
         self.freq=1
         self.gpio_num=HLT_heater_cspin
         self.power=0
-        self.PID=PID.__init__ (self,Kp=112.344665712, Ki=0.840663751375, Kd=12.5112685197)
-        self.PID.selfoutput_limits = (0, 100)
-        self.PID.sample_time=5
+        self.pid=PID(Kp=112.344665712, Ki=0.840663751375, Kd=12.5112685197)
+        self.pid.output_limits = (0, 100)
+        self.pid.sample_time=5
+        self.running=False
+        self.pid.proportional_on_measurement = False
     def stop(self):
         self.running = False
-    def start(self):
+    def run(self):
         self.running = True
         GPIO.setup(self.gpio_num, GPIO.OUT)
         
@@ -208,8 +212,8 @@ class HLT_controller_class(object):
             T=1 / self.freq
             TimeOn= round (T * (self.power / 100),4)
             TimeOff = T - TimeOn
-            self.PID.setpoint=HLT_temp_setpoint
-            self.power = self.PID.__call__ (self,HLT_temp)
+            self.pid.setpoint=HLT_temp_setpoint
+            self.power = self.pid(HLT_temp)
             if not (self.power==0):
                 GPIO.output(self.gpio_num, GPIO.HIGH)
                 time.sleep (TimeOn)
@@ -217,12 +221,15 @@ class HLT_controller_class(object):
                 GPIO.output(self.gpio_num, GPIO.LOW)
                 time.sleep (TimeOff)
         GPIO.output(self.gpio_num, GPIO.LOW)
-    def toggle(self):
+    def start(self)
         if self.running == False:
             HLT_heater_thread = threading.Thread(target=self.start)
             HLT_heater_thread.daemon=True
             HLT_heater_thread.start()
-            
+ 
+    def toggle(self):
+        if self.running == False:
+            self.start()
         else:
             self.stop()
 
@@ -230,8 +237,6 @@ class HLT_controller_class(object):
 def gui():
 
     root = tk.Tk()
-
-
     image1 = tk.PhotoImage(file='Background.png')
     w = image1.width()
     h = image1.height()
