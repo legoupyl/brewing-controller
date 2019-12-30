@@ -1,3 +1,4 @@
+import os 
 import threading
 import tkinter as tk
 import time
@@ -15,8 +16,8 @@ GPIO.setmode(GPIO.BCM)
 bus=smbus.SMBus(1)
 
 
-BK_encoder_int_pin= Button(8)
-HLT_encoder_int_pin = Button(4)
+#BK_encoder_int_pin= Button(8)
+#HLT_encoder_int_pin = Button(4)
 
 
 FontSize1=100
@@ -43,6 +44,10 @@ HLT_pt100_cspin = 18
 
 BK_heater_cspin=23
 HLT_heater_cspin=24 # or 24
+
+BK_encoder_cspin=0x03
+HLT_encoder_cspin=0x10
+
 
 
 
@@ -92,62 +97,73 @@ class PT100(object):
 
 
 # Init rotary encoders 
-"""
-<encconfig=(i2cEncoderLibV2.INT_DATA | i2cEncoderLibV2.WRAP_ENABLE | i2cEncoderLibV2.DIRE_LEFT | i2cEncoderLibV2.IPUP_ENABLE | i2cEncoderLibV2.RMOD_X1 | i2cEncoderLibV2.RGB_ENCODER)
-HLT_encoder = i2cEncoderLibV2.i2cEncoderLibV2(bus,0x03)
-HLT_encoder.begin(encconfig)
-HLT_encoder.writeCounter(148)
-HLT_encoder.writeMin(100)
-HLT_encoder.writeMax(200)
-HLT_encoder.writeStep(1)
-HLT_encoder.writeInterruptConfig(0xff)
-"""
+
+encconfig=(i2cEncoderLibV2.INT_DATA | i2cEncoderLibV2.WRAP_DISABLE | i2cEncoderLibV2.DIRE_LEFT | i2cEncoderLibV2.IPUP_ENABLE | i2cEncoderLibV2.RMOD_X1 | i2cEncoderLibV2.STD_ENCODER)
+
+
 
 
 def HLT_encoder_fnc():
     global HLT_temp_setpoint
+    HLT_encoder = i2cEncoderLibV2.i2cEncoderLibV2(bus,HLT_encoder_cspin)
+    HLT_encoder.begin(encconfig)
+    HLT_encoder.writeCounter(74)
+    HLT_encoder.writeMin(0)
+    HLT_encoder.writeMax(100)
+    HLT_encoder.writeStep(1)
+    HLT_encoder.writeDoublePushPeriod (50)
+    HLT_encoder.writeInterruptConfig(0xff)
     while True:
-        if HLT_encoder_int_pin.is_pressed :
-            HLT_encoder.updateStatus()
-            if HLT_encoder.readStatus(i2cEncoderLibV2.RINC) == True :
-                print ('Increment: %d' % (HLT_encoder.readCounter32())) 
-            elif HLT_encoder.readStatus(i2cEncoderLibV2.RDEC) == True :
-                print ('Decrement:  %d' % (HLT_encoder.readCounter32())) 
-            if HLT_encoder.readStatus(i2cEncoderLibV2.RMAX) == True :
-                print ('Max!') 
-            elif HLT_encoder.readStatus(i2cEncoderLibV2.RMIN) == True :
-                print ('Min!') 
-            if HLT_encoder.readStatus (i2cEncoderLibV2.PUSHP) == True:
-                print ("Button Pushed!")
-                BK_controller.toggle()
-            HLT_temp_setpoint = round ((HLT_encoder.readCounter32() /2),1)
-"""
-BK_encoder = i2cEncoderLibV2.i2cEncoderLibV2(bus,0x05)
-BK_encoder.begin(encconfig)
-BK_encoder.writeCounter(100)
-BK_encoder.writeMin(0)
-BK_encoder.writeMax(100)
-BK_encoder.writeStep(1)
-BK_encoder.writeInterruptConfig(0xff)
-"""
+        #if HLT_encoder_int_pin.is_pressed :
+        HLT_encoder.updateStatus()
+        if HLT_encoder.readStatus(i2cEncoderLibV2.RINC) == True :
+            print ('Increment: %d' % (HLT_encoder.readCounter32())) 
+        elif HLT_encoder.readStatus(i2cEncoderLibV2.RDEC) == True :
+            print ('Decrement:  %d' % (HLT_encoder.readCounter32())) 
+        if HLT_encoder.readStatus(i2cEncoderLibV2.RMAX) == True :
+            print ('Max!') 
+        elif HLT_encoder.readStatus(i2cEncoderLibV2.RMIN) == True :
+            print ('Min!') 
+        if HLT_encoder.readStatus (i2cEncoderLibV2.PUSHP) == True:
+            print ("Button Pushed!")
+            HLT_controller.toggle()
+        if HLT_encoder.readStatus (i2cEncoderLibV2.PUSHD) == True:
+            print ("Ciao!")
+            os.system('sudo shutdown now')
+        HLT_temp_setpoint = round ((HLT_encoder.readCounter32()),1)
+        time.sleep(0.1)
+
+
 
 def BK_encoder_fnc():
     global BK_power_setpoint
+    BK_encoder = i2cEncoderLibV2.i2cEncoderLibV2(bus,BK_encoder_cspin)
+    BK_encoder.begin(encconfig)
+    BK_encoder.writeCounter(100)
+    BK_encoder.writeMin(0)
+    BK_encoder.writeMax(100)
+    BK_encoder.writeStep(1)
+    BK_encoder.writeInterruptConfig(0xff)
+    BK_encoder.writeDoublePushPeriod(50)
+
     while True:
-        if BK_encoder_int_pin.is_pressed :
-            BK_encoder.updateStatus()
-            if BK_encoder.readStatus(i2cEncoderLibV2.RINC) == True :
-                print ('Increment: %d' % (BK_encoder.readCounter32())) 
-            elif BK_encoder.readStatus(i2cEncoderLibV2.RDEC) == True :
-                print ('Decrement:  %d' % (BK_encoder.readCounter32())) 
-            if BK_encoder.readStatus(i2cEncoderLibV2.RMAX) == True :
-                print ('Max!') 
-            elif BK_encoder.readStatus(i2cEncoderLibV2.RMIN) == True :
-                print ('Min!') 
-            if BK_encoder.readStatus (i2cEncoderLibV2.PUSHP) == True:
-                print ("Button Pushed!")
-                BK_controller.toggle()
-            BK_power_setpoint = BK_encoder.readCounter32()
+        #if BK_encoder_int_pin.is_pressed :
+
+        BK_encoder.updateStatus()
+        if BK_encoder.readStatus(i2cEncoderLibV2.RINC) == True :
+            print ('Increment: %d' % (BK_encoder.readCounter32())) 
+        elif BK_encoder.readStatus(i2cEncoderLibV2.RDEC) == True :
+            print ('Decrement:  %d' % (BK_encoder.readCounter32())) 
+    
+        if BK_encoder.readStatus(i2cEncoderLibV2.RMAX) == True :
+            print ('Max!') 
+        elif BK_encoder.readStatus(i2cEncoderLibV2.RMIN) == True :
+            print ('Min!') 
+        if BK_encoder.readStatus (i2cEncoderLibV2.PUSHP) == True:
+            print ("Button Pushed!")
+            BK_controller.toggle()
+        BK_power_setpoint=BK_encoder.readCounter32()
+        time.sleep (0.1)
 
 class BK_controller_class(object):
     def __init__(self):
@@ -160,11 +176,13 @@ class BK_controller_class(object):
  
     def stop(self):
         self.running = False
+        print ("Stopping BK controller")
     def run(self):
+        print ("Running BK controller")
         self.running = True
         GPIO.setup(self.gpio_num, GPIO.OUT)
         while (self.running == True):
-            power =self.power
+            self.power=BK_power_setpoint
             T=1/self.freq
             TimeOn=round(T * (self.power / 100),4)
             TimeOff = T - TimeOn
@@ -178,17 +196,19 @@ class BK_controller_class(object):
         GPIO.output(self.gpio_num, GPIO.LOW)
    
     def start(self):
+         print ("Running BK controller")
          if self.running == False:
-            BK_heater_thread = threading.Thread(target=self.start)
+            
+            BK_heater_thread = threading.Thread(target=self.run)
             BK_heater_thread.daemon=True
             BK_heater_thread.start()
     def toggle(self):
         print ("start BK controller toggle" )
         if self.running == False:
-            print ("Starting BK controller" )
+            print ("Toggle : Starting BK controller" )
             self.start()
         else:
-            print ("Stoping BK controller" )
+            print ("Toggle:  Stoping BK controller" )
             self.stop()
 
 class HLT_controller_class(object):
@@ -203,11 +223,12 @@ class HLT_controller_class(object):
         self.running=False
         self.pid.proportional_on_measurement = False
     def stop(self):
+        print ("Stoping HLT controller" )
         self.running = False
     def run(self):
         self.running = True
         GPIO.setup(self.gpio_num, GPIO.OUT)
-        
+        print ("Running  HLT controller" )
         while self.running == True:
             T=1 / self.freq
             TimeOn= round (T * (self.power / 100),4)
@@ -221,17 +242,20 @@ class HLT_controller_class(object):
                 GPIO.output(self.gpio_num, GPIO.LOW)
                 time.sleep (TimeOff)
         GPIO.output(self.gpio_num, GPIO.LOW)
-    def start(self)
+    def start(self):
         if self.running == False:
-            HLT_heater_thread = threading.Thread(target=self.start)
+            print ("Starting HLT controller" )
+            HLT_heater_thread = threading.Thread(target=self.run)
             HLT_heater_thread.daemon=True
             HLT_heater_thread.start()
  
     def toggle(self):
         if self.running == False:
+            print ("Toggle : Starting HLT controller" )
             self.start()
         else:
             self.stop()
+            print ("Toggle : Stoping HLT controller" )
 
 
 def gui():
@@ -275,6 +299,9 @@ def gui():
 
         HLT_temp_setpoint_label.config (text=round (HLT_temp_setpoint,1))
         HLT_temp_setpoint_label.update()
+
+        BK_power_setpoint_label.config (text=str(BK_power_setpoint)+"%")
+        BK_power_setpoint_label.update()
         
         if HLT_controller.running:
             HLT_controller_label.config (text='ON',fg='red')
@@ -306,14 +333,9 @@ def get_temp():
     HLT_pt100.init()
     
     while True:
-        print ("loop")    
-        
         MLT_temp=MLT_pt100.read()
-        print ("MLT TEMP :" + str (MLT_temp))
         BK_temp=BK_pt100.read()
-        print ("BK TEMP :" + str (BK_temp))
         HLT_temp=HLT_pt100.read()
-        print ("HLT TEMP :" + str (HLT_temp))
         time.sleep(1)
 
 
@@ -328,13 +350,17 @@ get_temp_thread.start()
 HLT_controller=HLT_controller_class()
 BK_controller=BK_controller_class()
 
-HLT_encoder_thread = threading.Thread(target=HLT_encoder_fnc)
-HLT_encoder_thread.daemon=True
-HLT_encoder_thread.start()
 
 BK_encoder_thread = threading.Thread(target=BK_encoder_fnc)
 BK_encoder_thread.daemon=True
 BK_encoder_thread.start()
+
+
+HLT_encoder_thread = threading.Thread(target=HLT_encoder_fnc)
+HLT_encoder_thread.daemon=True
+HLT_encoder_thread.start()
+
+
 
 
 
