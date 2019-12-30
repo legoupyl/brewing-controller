@@ -11,13 +11,12 @@ from simple_pid import PID
 import atexit
 from RPi import GPIO
 
+# set working directory do script directory
+os.chdir(os.path.dirname(os.path.realpath(__file__)))
+
 GPIO.setmode(GPIO.BCM)
 
 bus=smbus.SMBus(1)
-
-
-#BK_encoder_int_pin= Button(8)
-#HLT_encoder_int_pin = Button(4)
 
 
 FontSize1=100
@@ -47,8 +46,6 @@ HLT_heater_cspin=24 # or 24
 
 BK_encoder_cspin=0x03
 HLT_encoder_cspin=0x10
-
-
 
 
 # Just for variables init
@@ -168,7 +165,7 @@ def BK_encoder_fnc():
 class BK_controller_class(object):
     def __init__(self):
         print ("Initializing BK controller")
-        self.running =False
+        self.running=False
         self.power =BK_power_setpoint
         self.freq=1
         self.gpio_num=BK_heater_cspin
@@ -351,6 +348,8 @@ HLT_controller=HLT_controller_class()
 BK_controller=BK_controller_class()
 
 
+time.sleep (1) #waiting controller initialization
+
 BK_encoder_thread = threading.Thread(target=BK_encoder_fnc)
 BK_encoder_thread.daemon=True
 BK_encoder_thread.start()
@@ -359,10 +358,6 @@ BK_encoder_thread.start()
 HLT_encoder_thread = threading.Thread(target=HLT_encoder_fnc)
 HLT_encoder_thread.daemon=True
 HLT_encoder_thread.start()
-
-
-
-
 
 
 gui_thread = threading.Thread(target=gui)
