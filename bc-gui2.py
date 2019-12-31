@@ -225,6 +225,8 @@ class BK_controller_class(object):
             print ("Toggle:  Stoping BK controller" )
             self.stop()
 
+
+
 class HLT_controller_class(object):
     def __init__(self):
         self.running =False
@@ -273,12 +275,14 @@ class HLT_controller_class(object):
 
 
 
-
+#Kp: 111.33691705166814
+#Ki: 0.0963955991789334
+#Kd: 2030.433776758053
 class MLT_controller_class(object):
     def __init__(self):
         self.running =False
         self.power=0
-        self.pid=PID(Kp=112.344665712, Ki=0.840663751375, Kd=12.5112685197)
+        self.pid=PID(Kp=111.3369, Ki=0.09639, Kd=2030.43377)
         self.pid.output_limits = (0, 2)
         self.pid.sample_time=30
         self.running=False
