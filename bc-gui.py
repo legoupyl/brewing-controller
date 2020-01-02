@@ -52,9 +52,12 @@ HLT_encoder_cspin=0x10
 MLT_temp = 0
 BK_temp = 0
 HLT_temp = 0
-HLT_temp_setpoint = 30
+HLT_temp_setpoint = 74
 BK_power_setpoint = 50
+MLT_temp_setpoint = 74
 
+
+MLT_REGUL_MODE = False
 
 
 def theEnd():
@@ -102,6 +105,7 @@ encconfig=(i2cEncoderLibV2.INT_DATA | i2cEncoderLibV2.WRAP_DISABLE | i2cEncoderL
 
 def HLT_encoder_fnc():
     global HLT_temp_setpoint
+    global MLT_REGUL_MODE
     HLT_encoder = i2cEncoderLibV2.i2cEncoderLibV2(bus,HLT_encoder_cspin)
     HLT_encoder.begin(encconfig)
     HLT_encoder.writeCounter(74)
@@ -123,11 +127,21 @@ def HLT_encoder_fnc():
             print ('Min!') 
         if HLT_encoder.readStatus (i2cEncoderLibV2.PUSHP) == True:
             print ("Button Pushed!")
-            HLT_controller.toggle()
+            if MLT_REGUL_MODE:
+                MLT_controller.toggle()
+            else:
+                HLT_controller.toggle()
+
         if HLT_encoder.readStatus (i2cEncoderLibV2.PUSHD) == True:
-            print ("Ciao!")
-            os.system('sudo shutdown now')
-        HLT_temp_setpoint = round ((HLT_encoder.readCounter32()),1)
+            print ("Switching MLT_REGUL_MODE")
+            MLT_REGUL_MODE=not MLT_REGUL_MODE
+
+        counterValue=round ((HLT_encoder.readCounter32()),1)
+        if MLT_REGUL_MODE:
+            MLT_temp_setpoint = counterValue
+        else:
+            HLT_temp_setpoint = counterValue
+
         time.sleep(0.1)
 
 
@@ -159,6 +173,9 @@ def BK_encoder_fnc():
         if BK_encoder.readStatus (i2cEncoderLibV2.PUSHP) == True:
             print ("Button Pushed!")
             BK_controller.toggle()
+        if BK_encoder.readStatus (i2cEncoderLibV2.PUSHD) == True:
+            print ("Ciao!")
+            os.system('sudo shutdown now')
         BK_power_setpoint=BK_encoder.readCounter32()
         time.sleep (0.1)
 
@@ -208,6 +225,8 @@ class BK_controller_class(object):
             print ("Toggle:  Stoping BK controller" )
             self.stop()
 
+
+
 class HLT_controller_class(object):
     def __init__(self):
         self.running =False
@@ -255,6 +274,50 @@ class HLT_controller_class(object):
             print ("Toggle : Stoping HLT controller" )
 
 
+
+#Kp: 111.33691705166814
+#Ki: 0.0963955991789334
+#Kd: 2030.433776758053
+class MLT_controller_class(object):
+    def __init__(self):
+        self.running =False
+        self.power=0
+        self.pid=PID(Kp=111.3369, Ki=0.09639, Kd=2030.43377)
+        self.pid.output_limits = (0, 2)
+        self.pid.sample_time=30
+        self.running=False
+        self.pid.proportional_on_measurement = False
+    def stop(self):
+        print ("Stoping MLT controller" )
+        self.running = False
+        HLT_controller.stop()
+    def run(self):
+        self.running = True
+        print ("Running  MLT controller" )
+        while self.running == True:
+            time.sleep (30)
+            self.pid.setpoint=MLT_temp_setpoint
+            self.power = self.pid(MLT_temp)
+            HLT_temp_setpoint=MLT_temp_setpoint + self.power
+
+    def start(self):
+        HLT_controller.start()
+        if self.running == False:
+            print ("Starting MLT controller" )
+            MLT_heater_thread = threading.Thread(target=self.run)
+            MLT_heater_thread.daemon=True
+            MLT_heater_thread.start()
+        
+ 
+    def toggle(self):
+        if self.running == False:
+            print ("Toggle : Starting MLT controller" )
+            self.start()
+        else:
+            self.stop()
+            print ("Toggle : Stoping MLT controller" )
+
+
 def gui():
 
     root = tk.Tk()
@@ -268,7 +331,10 @@ def gui():
 
     MLT_temp_label = tk.Label(panel1, text=MLT_temp,bg='black',font=("Helvetica", FontSize1),width=0,height=0,fg='orange')
     MLT_temp_label.place (x=xMLT,y=y1 )
-  
+    MLT_temp_setpoint_label=label = tk.Label(panel1, text=MLT_temp_setpoint,bg='black',font=("Helvetica", FontSize2),width=0,height=0,fg='white')
+    MLT_temp_setpoint_label.place (x=xMLT+xOffset2,y=y2 )
+    MLT_controller_label = tk.Label(panel1, text="OFF",bg='black',font=("Helvetica", FontSize3),width=0,height=0,fg='white')
+    MLT_controller_label.place (x=xMLT+xOffset2,y=y3 )
 
     BK_temp_label = tk.Label(panel1, text=BK_temp,bg='black',font=("Helvetica", FontSize1),width=0,height=0,fg='orange')
     BK_temp_label.place (x=xBK,y=y1 )
@@ -300,12 +366,31 @@ def gui():
         BK_power_setpoint_label.config (text=str(BK_power_setpoint)+"%")
         BK_power_setpoint_label.update()
         
-        if HLT_controller.running:
-            HLT_controller_label.config (text='ON',fg='red')
+        
+        if MLT_REGUL_MODE:
+            HLT_controller_label.config (text='AUTO')
         else:
-            HLT_controller_label.config (text='OFF',fg='white')
+            if HLT_controller.running:
+                HLT_controller_label.config (text='ON')
+            else:
+                HLT_controller_label.config (text='OFF')
+ 
+ 
+        if HLT_controller.running:
+            HLT_controller_label.config (fg='red')
+        else:
+            HLT_controller_label.config (fg='white')
+
         HLT_controller_label.update()
 
+        if MLT_controller.running:
+            MLT_controller_label.config (text='ON',fg='red')
+        else:
+            MLT_controller_label.config (text='OFF',fg='white')
+            MLT_controller_label.update()
+        
+        MLT_controller_label.update()
+        
         if BK_controller.running:
             BK_controller_label.config (text='ON',fg='red')
         else:
@@ -346,7 +431,7 @@ get_temp_thread.start()
 
 HLT_controller=HLT_controller_class()
 BK_controller=BK_controller_class()
-
+MLT_controller=MLT_controller_class()
 
 time.sleep (1) #waiting controller initialization
 
