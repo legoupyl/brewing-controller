@@ -34,6 +34,11 @@ xHLT= 730
 xOffset = 20
 xOffset2 = 40
 
+# PT100 Calibration offset
+MLT_Calib_offset = -1.1
+BK_Calib_offset = -1.1
+HLT_Calib_offset = -1.1
+
 # Set wiring variable
 
 MLT_pt100_cspin = 19
@@ -433,9 +438,9 @@ def get_temp():
     HLT_pt100.init()
     
     while True:
-        MLT_temp=MLT_pt100.read()
-        BK_temp=BK_pt100.read()
-        HLT_temp=HLT_pt100.read()
+        MLT_temp=MLT_pt100.read() + MLT_Calib_offset
+        BK_temp=BK_pt100.read() + BK_Calib_offset
+        HLT_temp=HLT_pt100.read() + HLT_Calib_offset
         time.sleep(1)
 
 
