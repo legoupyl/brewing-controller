@@ -106,6 +106,7 @@ encconfig=(i2cEncoderLibV2.INT_DATA | i2cEncoderLibV2.WRAP_DISABLE | i2cEncoderL
 def HLT_encoder_fnc():
     global HLT_temp_setpoint
     global MLT_REGUL_MODE
+    global MLT_temp_setpoint
     HLT_encoder = i2cEncoderLibV2.i2cEncoderLibV2(bus,HLT_encoder_cspin)
     HLT_encoder.begin(encconfig)
     HLT_encoder.writeCounter(74)
@@ -135,13 +136,16 @@ def HLT_encoder_fnc():
         if HLT_encoder.readStatus (i2cEncoderLibV2.PUSHD) == True:
             print ("Switching MLT_REGUL_MODE")
             MLT_REGUL_MODE=not MLT_REGUL_MODE
+            if not MLT_REGUL_MODE:
+                MLT_controller.stop()
+
 
         counterValue=round ((HLT_encoder.readCounter32()),1)
         if MLT_REGUL_MODE:
             MLT_temp_setpoint = counterValue
+            #HLT_temp_setpoint=MLT_temp_setpoint
         else:
             HLT_temp_setpoint = counterValue
-
         time.sleep(0.1)
 
 
@@ -154,8 +158,8 @@ def BK_encoder_fnc():
     BK_encoder.writeMin(0)
     BK_encoder.writeMax(100)
     BK_encoder.writeStep(1)
-    BK_encoder.writeInterruptConfig(0xff)
     BK_encoder.writeDoublePushPeriod(50)
+    BK_encoder.writeInterruptConfig(0xff)
 
     while True:
         #if BK_encoder_int_pin.is_pressed :
@@ -279,19 +283,23 @@ class HLT_controller_class(object):
 #Ki: 0.0963955991789334
 #Kd: 2030.433776758053
 class MLT_controller_class(object):
+    #global HLT_temp_setpoint
     def __init__(self):
         self.running =False
         self.power=0
         self.pid=PID(Kp=111.3369, Ki=0.09639, Kd=2030.43377)
-        self.pid.output_limits = (0, 2)
+        self.pid.output_limits = (0, 1)
         self.pid.sample_time=30
         self.running=False
         self.pid.proportional_on_measurement = False
+ 
     def stop(self):
         print ("Stoping MLT controller" )
-        self.running = False
         HLT_controller.stop()
+        self.running = False
+ 
     def run(self):
+        global HLT_temp_setpoint
         self.running = True
         print ("Running  MLT controller" )
         while self.running == True:
@@ -299,6 +307,7 @@ class MLT_controller_class(object):
             self.pid.setpoint=MLT_temp_setpoint
             self.power = self.pid(MLT_temp)
             HLT_temp_setpoint=MLT_temp_setpoint + self.power
+            print ("Auto : HLT temp set point must be" + str(HLT_temp_setpoint))
 
     def start(self):
         HLT_controller.start()
@@ -315,6 +324,7 @@ class MLT_controller_class(object):
             self.start()
         else:
             self.stop()
+            MLT_controller.stop()
             print ("Toggle : Stoping MLT controller" )
 
 
@@ -357,37 +367,45 @@ def gui():
         MLT_temp_label.update()
         BK_temp_label.config (text=round (BK_temp,1))
         BK_temp_label.update()
-        HLT_temp_label.config (text=round (HLT_temp,1))
-        HLT_temp_label.update()
-
-        HLT_temp_setpoint_label.config (text=round (HLT_temp_setpoint,1))
-        HLT_temp_setpoint_label.update()
-
+       
         BK_power_setpoint_label.config (text=str(BK_power_setpoint)+"%")
         BK_power_setpoint_label.update()
         
+
+
+# MAnaging HLT display
+        HLT_temp_label.config (text=round (HLT_temp,1))
+        HLT_temp_setpoint_label.config (text=round (HLT_temp_setpoint,1))
         
         if MLT_REGUL_MODE:
             HLT_controller_label.config (text='AUTO')
+            HLT_temp_setpoint_label.config (fg='grey')
         else:
+            HLT_temp_setpoint_label.config (fg='white')
             if HLT_controller.running:
                 HLT_controller_label.config (text='ON')
             else:
                 HLT_controller_label.config (text='OFF')
- 
- 
+  
         if HLT_controller.running:
             HLT_controller_label.config (fg='red')
         else:
             HLT_controller_label.config (fg='white')
 
+        HLT_temp_label.update()
+
+        HLT_temp_setpoint_label.config (text=round (HLT_temp_setpoint,1))
+        HLT_temp_setpoint_label.update()
         HLT_controller_label.update()
 
+
+
+        MLT_temp_setpoint_label.config (text=round (MLT_temp_setpoint,1))
+        MLT_temp_setpoint_label.update()
         if MLT_controller.running:
             MLT_controller_label.config (text='ON',fg='red')
         else:
             MLT_controller_label.config (text='OFF',fg='white')
-            MLT_controller_label.update()
         
         MLT_controller_label.update()
         
