@@ -27,39 +27,41 @@ y1=50
 y2=200
 y3= 350
 
-xMLT=35
-xBK=380
-xHLT= 730
+xHLT=35
+xMLT=380
+xBK= 730
 
 xOffset = 20
 xOffset2 = 40
 
 # PT100 Calibration offset
+HLT_Calib_offset = -1.3
 MLT_Calib_offset = -1.3
 BK_Calib_offset = -1.3
-HLT_Calib_offset = -1.3
+
 
 # Set wiring variable
-
+HLT_pt100_cspin = 18
 MLT_pt100_cspin = 19
 BK_pt100_cspin = 26
-HLT_pt100_cspin = 18
 
 
-BK_heater_cspin=23
 HLT_heater_cspin=24 # or 24
+BK_heater_cspin=23
 
-BK_encoder_cspin=0x03
 HLT_encoder_cspin=0x10
+BK_encoder_cspin=0x03
+
 
 
 # Just for variables init
+HLT_temp = 0
 MLT_temp = 0
 BK_temp = 0
-HLT_temp = 0
+
 HLT_temp_setpoint = 74
-BK_power_setpoint = 50
 MLT_temp_setpoint = 74
+BK_power_setpoint = 50
 
 
 MLT_REGUL_MODE = False
