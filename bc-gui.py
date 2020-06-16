@@ -353,7 +353,7 @@ def gui():
     MLT_temp_setpoint_label.place (x=xMLT+xOffset2,y=y2 )
     MLT_controller_label = tk.Label(panel1, text="OFF",bg='black',font=("Helvetica", FontSize3),width=0,height=0,fg='white')
     MLT_controller_label.place (x=xMLT+xOffset2,y=y3 )
-    MLT_controller_label2 = tk.Label(panel1, text="MLT",bg='black',font=("Helvetica", FontSize3),width=0,height=0,fg='#4ca5fe')
+    MLT_controller_label2 = tk.Label(panel1, text="MLT",bg='black',font=("Helvetica", FontSize3,weight='bold'),width=0,height=0,fg='#7ad3fc')
     MLT_controller_label2.place (x=xMLT+xOffset2,y=y4 )
     
     
@@ -363,7 +363,7 @@ def gui():
     BK_power_setpoint_label.place (x=xBK,y=y2 )
     BK_controller_label = tk.Label(panel1, text='OFF',bg='black',font=("Helvetica", FontSize3),width=0,height=0,fg='white')
     BK_controller_label.place (x=xBK+xOffset2,y=y3 )
-    BK_controller_label2 = tk.Label(panel1, text='BK',bg='black',font=("Helvetica", FontSize3),width=0,height=0,fg='#4ca5fe')
+    BK_controller_label2 = tk.Label(panel1, text='BK',bg='black',font=("Helvetica", FontSize3,weight='bold'),width=0,height=0,fg='#7ad3fc')
     BK_controller_label2.place (x=xBK+xOffset2,y=y4 )
 
 
@@ -373,7 +373,7 @@ def gui():
     HLT_temp_setpoint_label.place (x=xHLT+xOffset2,y=y2 )
     HLT_controller_label = tk.Label(panel1, text="OFF",bg='black',font=("Helvetica", FontSize3),width=0,height=0,fg='white')
     HLT_controller_label.place (x=xHLT+xOffset2,y=y3 )
-    HLT_controller_label2 = tk.Label(panel1, text="HLT",bg='black',font=("Helvetica", FontSize3),width=0,height=0,fg='#4ca5fe')
+    HLT_controller_label2 = tk.Label(panel1, text="HLT",bg='black',font=("Helvetica", FontSize3,,weight='bold'),width=0,height=0,fg='#7ad3fc')
     HLT_controller_label2.place (x=xHLT+xOffset2,y=y4 )
 
     while True:
