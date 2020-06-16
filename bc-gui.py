@@ -363,6 +363,8 @@ def gui():
     BK_power_setpoint_label.place (x=xBK,y=y2 )
     BK_controller_label = tk.Label(panel1, text='OFF',bg='black',font=("Helvetica", FontSize3),width=0,height=0,fg='white')
     BK_controller_label.place (x=xBK+xOffset2,y=y3 )
+    BK_controller_label2 = tk.Label(panel1, text='BK',bg='black',font=("Helvetica", FontSize3),width=0,height=0,fg='Blue')
+    BK_controller_label2.place (x=xBK+xOffset2,y=y4 )
 
 
     HLT_temp_label = tk.Label(panel1, text=HLT_temp,bg='black',font=("Helvetica", FontSize1),width=0,height=0,fg='orange')
@@ -371,6 +373,8 @@ def gui():
     HLT_temp_setpoint_label.place (x=xHLT+xOffset2,y=y2 )
     HLT_controller_label = tk.Label(panel1, text="OFF",bg='black',font=("Helvetica", FontSize3),width=0,height=0,fg='white')
     HLT_controller_label.place (x=xHLT+xOffset2,y=y3 )
+    HLT_controller_label2 = tk.Label(panel1, text="HLT",bg='black',font=("Helvetica", FontSize3),width=0,height=0,fg='blue')
+    HLT_controller_label2.place (x=xHLT+xOffset2,y=y4 )
 
     while True:
         time.sleep (0.1)
