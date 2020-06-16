@@ -26,6 +26,7 @@ FontSize3=60
 y1=50
 y2=200
 y3= 350
+y4= 500
 
 xHLT=35
 xMLT=380
@@ -352,7 +353,10 @@ def gui():
     MLT_temp_setpoint_label.place (x=xMLT+xOffset2,y=y2 )
     MLT_controller_label = tk.Label(panel1, text="OFF",bg='black',font=("Helvetica", FontSize3),width=0,height=0,fg='white')
     MLT_controller_label.place (x=xMLT+xOffset2,y=y3 )
-
+    MLT_controller_label2 = tk.Label(panel1, text="MLT",bg='black',font=("Helvetica", FontSize3),width=0,height=0,fg='blue')
+    MLT_controller_label2.place (x=xMLT+xOffset2,y=y4 )
+    
+    
     BK_temp_label = tk.Label(panel1, text=BK_temp,bg='black',font=("Helvetica", FontSize1),width=0,height=0,fg='orange')
     BK_temp_label.place (x=xBK,y=y1 )
     BK_power_setpoint_label=label = tk.Label(panel1, text=str (BK_power_setpoint) + "%",bg='black',font=("Helvetica", FontSize2),width=0,height=0,fg='white')
