@@ -36,8 +36,8 @@ xOffset = 20
 xOffset2 = 40
 
 # PT100 Calibration offset
-HLT_Calib_offset = -1.3
-MLT_Calib_offset = -1.3
+HLT_Calib_offset = -0.3
+MLT_Calib_offset = -2.5
 BK_Calib_offset = -1.3
 
 
