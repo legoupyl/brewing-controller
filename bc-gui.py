@@ -36,9 +36,9 @@ xOffset = 20
 xOffset2 = 40
 
 # PT100 Calibration offset
-HLT_Calib_offset = 0
-MLT_Calib_offset = 0
-BK_Calib_offset = 0
+HLT_Calib_offset = -0.7
+MLT_Calib_offset = -1.1
+BK_Calib_offset = -1.1
 
 
 # Set wiring variable
