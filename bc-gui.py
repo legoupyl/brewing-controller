@@ -51,7 +51,7 @@ HLT_heater_cspin=24 # or 24
 BK_heater_cspin=23
 
 HLT_encoder_cspin=0x10
-BK_encoder_cspin=0x03
+BK_encoder_cspin=0x07
 
 
 
