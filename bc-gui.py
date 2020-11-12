@@ -14,6 +14,7 @@ from RPi import GPIO
 # set working directory do script directory
 os.chdir(os.path.dirname(os.path.realpath(__file__)))
 
+
 GPIO.setmode(GPIO.BCM)
 
 bus=smbus.SMBus(1)
@@ -344,6 +345,7 @@ def gui():
     h = image1.height()
     root.geometry("%dx%d+0+0" % (w, h))
     root.attributes('-fullscreen', 1)
+    root.wm_attributes('-transparentcolor','black')
     panel1 = tk.Label(root, image=image1)
     panel1.pack(side='top', fill='both', expand='yes')
 
