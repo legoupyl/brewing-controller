@@ -350,8 +350,6 @@ def gui():
     
     panel1 = tk.Label(root, image=image1)
     panel1.pack(side='top', fill='both', expand='yes')
-    root.wait_visibility(root)
-    root.wm_attributes("-transparentcolor", 'black')
     MLT_temp_label = tk.Label(panel1, text=MLT_temp,bg='black',font=("Helvetica", FontSize1),width=0,height=0,fg='orange')
     MLT_temp_label.place (x=xMLT,y=y1 )
     MLT_temp_setpoint_label=label = tk.Label(panel1, text=MLT_temp_setpoint,bg='black',font=("Helvetica", FontSize2),width=0,height=0,fg='white')
