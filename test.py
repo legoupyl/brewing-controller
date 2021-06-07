@@ -68,7 +68,15 @@ BK_power_setpoint = 50
 
 MLT_REGUL_MODE = False
 
+
 BK_encoder = i2cEncoderLibV2.i2cEncoderLibV2(bus,BK_encoder_cspin)
+BK_encoder.begin(encconfig)
+BK_encoder.writeCounter(100)
+BK_encoder.writeMin(0)
+BK_encoder.writeMax(100)
+BK_encoder.writeStep(1)
+BK_encoder.writeDoublePushPeriod(50)
+BK_encoder.writeInterruptConfig(0xff)
 
 while True :
     BK_encoder.updateStatus()
