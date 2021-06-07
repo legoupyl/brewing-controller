@@ -61,8 +61,9 @@ HLT_temp = 0
 MLT_temp = 0
 BK_temp = 0
 
-HLT_temp_setpoint = 74
-MLT_temp_setpoint = 74
+HLT_temp_setpoint = 65
+MLT_temp_setpoint = 65
+BK_temp_setpoint = 75
 BK_power_setpoint = 50
 
 
