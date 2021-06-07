@@ -183,12 +183,18 @@ def BK_encoder_fnc():
             print ('Max!') 
         elif BK_encoder.readStatus(i2cEncoderLibV2.RMIN) == True :
             print ('Min!') 
-        if BK_encoder.readStatus (i2cEncoderLibV2.PUSHP) == True:
+        if ( BK_encoder.readStatus(i2cEncoderLibV2.PUSHP) and BK_encoder.readStatus(i2cEncoderLibV2.PUSHR)):
             print ("Button Pushed!")
             BK_controller.toggle()
-        if BK_encoder.readStatus (i2cEncoderLibV2.PUSHD) == True:
+        if (BK_encoder.readStatus(i2cEncoderLibV2.PUSHP) and (BK_encoder.readStatus(i2cEncoderLibV2.PUSHR)==False)):
             print ("Ciao!")
             os.system('sudo shutdown now')
+            
+            
+        if BK_encoder.readStatus (i2cEncoderLibV2.PUSHD) == True:
+            print ("Double Push")
+
+            
         BK_power_setpoint=BK_encoder.readCounter32()
         time.sleep (0.1)
 
