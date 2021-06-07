@@ -75,7 +75,7 @@ BK_encoder.writeCounter(100)
 BK_encoder.writeMin(0)
 BK_encoder.writeMax(100)
 BK_encoder.writeStep(1)
-BK_encoder.writeDoublePushPeriod(50)
+BK_encoder.writeDoublePushPeriod(100)
 BK_encoder.writeInterruptConfig(0xff)
 
 while True :
