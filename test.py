@@ -68,7 +68,7 @@ BK_power_setpoint = 50
 
 MLT_REGUL_MODE = False
 
-
+encconfig=(i2cEncoderLibV2.INT_DATA | i2cEncoderLibV2.WRAP_DISABLE | i2cEncoderLibV2.DIRE_LEFT | i2cEncoderLibV2.IPUP_ENABLE | i2cEncoderLibV2.RMOD_X1 | i2cEncoderLibV2.STD_ENCODER)
 BK_encoder = i2cEncoderLibV2.i2cEncoderLibV2(bus,BK_encoder_cspin)
 BK_encoder.begin(encconfig)
 BK_encoder.writeCounter(100)
