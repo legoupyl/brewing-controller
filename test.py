@@ -72,7 +72,7 @@ BK_encoder = i2cEncoderLibV2.i2cEncoderLibV2(bus,BK_encoder_cspin)
 
 while True :
     BK_encoder.updateStatus()
-    if (BK_encoder.readStatus(i2cEncoderLibV2.PUSHP) and (BK_encoder.readStatus(i2cEncoderLibV2.PUSHR)==false)) : 
+    if (BK_encoder.readStatus(i2cEncoderLibV2.PUSHP) and (BK_encoder.readStatus(i2cEncoderLibV2.PUSHR)==False)) : 
         print("Long push!")
 
     if ( BK_encoder.readStatus(i2cEncoderLibV2.PUSHP) and BK_encoder.readStatus(i2cEncoderLibV2.PUSHR)) :
