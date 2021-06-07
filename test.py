@@ -71,13 +71,13 @@ MLT_REGUL_MODE = False
 BK_encoder = i2cEncoderLibV2.i2cEncoderLibV2(bus,BK_encoder_cspin)
 
 while True :
-    if (BK_encoder.readStatus(PUSHP) and (BK_encoder.readStatus(PUSHR)==false)) : 
+    if (BK_encoder.readStatus(i2cEncoderLibV2.PUSHP) and (BK_encoder.readStatus(i2cEncoderLibV2.PUSHR)==false)) : 
         print("Long push!")
 
-    if ( BK_encoder.readStatus(PUSHP) and BK_encoder.readStatus(PUSHR)) :
+    if ( BK_encoder.readStatus(i2cEncoderLibV2.PUSHP) and BK_encoder.readStatus(i2cEncoderLibV2.PUSHR)) :
         print("Fast push!")
 
-    if ( BK_encoder.readStatus(PUSHD)) :
+    if ( BK_encoder.readStatus(i2cEncoderLibV2.PUSHD)) :
         print("Double push!")
 
     time.sleep(0.1)
