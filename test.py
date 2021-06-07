@@ -69,3 +69,15 @@ BK_power_setpoint = 50
 MLT_REGUL_MODE = False
 
 BK_encoder = i2cEncoderLibV2.i2cEncoderLibV2(bus,BK_encoder_cspin)
+
+while True
+    if (BK_ncoder.readStatus(PUSHP) and (BK_encoder.readStatus(PUSHR)==false)) : 
+        print("Long push!")
+
+    if ( BK_encoder.readStatus(PUSHP) and BK_encoder.readStatus(PUSHR)) :
+        print("Fast push!")
+
+    if ( BK_encoder.readStatus(PUSHD)) :
+        print("Double push!")
+
+    time.sleep(0.1)
