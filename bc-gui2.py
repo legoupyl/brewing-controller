@@ -75,8 +75,8 @@ MLT_REGUL_MODE = False
 
 def theEnd():
     print ("Goodbye !")
-    GPIO.output(self.BK_heater_cspin, GPIO.LOW)
-    GPIO.output(self.HLT_heater_cspin, GPIO.LOW)
+    #GPIO.output(self.BK_heater_cspin, GPIO.LOW)
+    #GPIO.output(self.HLT_heater_cspin, GPIO.LOW)
 
 
 class BK_controller_status_class(object):
@@ -563,8 +563,9 @@ get_temp_thread.start()
 
 HLT_controller=HLT_controller_class()
 BK_controller_status=BK_controller_status_class()
-BK_temp_controller=BK_temp_controller_class()
 BK_power_controller=BK_power_controller_class()
+BK_temp_controller=BK_temp_controller_class()
+
 
 MLT_controller=MLT_controller_class()
 
