@@ -484,7 +484,7 @@ def gui():
         BK_temp_label.config (text=round (BK_temp,1))
         BK_temp_label.update()
        
-        BK_setpoint_label.config (text=str(BK_setpoint)+"%")
+        BK_setpoint_label.config (text=str(BK_setpoint)+ BK_controller_status.unit)
         BK_setpoint_label.update()
         
 
@@ -564,6 +564,7 @@ get_temp_thread.start()
 
 
 HLT_controller=HLT_controller_class()
+
 BK_controller_status=BK_controller_status_class()
 BK_power_controller=BK_power_controller_class()
 BK_temp_controller=BK_temp_controller_class()
