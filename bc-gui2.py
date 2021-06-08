@@ -66,8 +66,8 @@ BK_temp = 0
 
 HLT_temp_setpoint = 65
 MLT_temp_setpoint = 65
-BK_temp_setpoint = 75
-BK_setpoint = 50
+
+BK_setpoint = 75
 
 
 MLT_REGUL_MODE = False
@@ -313,7 +313,7 @@ class BK_temp_controller_class(object):
             T=1 / self.freq
             TimeOn= round (T * (self.power / 100),4)
             TimeOff = T - TimeOn
-            self.pid.setpoint=BK_temp_setpoint
+            self.pid.setpoint=BK_setpoint
             self.power = self.pid(BK_temp)
             if not (self.power==0):
                 GPIO.output(self.gpio_num, GPIO.HIGH)
