@@ -81,7 +81,7 @@ def theEnd():
 
 class BK_controller_status_class(object):
     # CONFIG PARAMETER & PROPERTIES
-    def __init__(self,csPinValue):
+    def __init__(self):
         self.mode = "temp"
         self.unit = "C"
 
