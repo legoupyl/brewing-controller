@@ -245,6 +245,7 @@ class BK_power_controller_class(object):
         self.freq=1
         self.gpio_num=BK_heater_cspin
         self.mode="power"
+        GPIO.setup(self.gpio_num, GPIO.OUT)
         GPIO.output(self.gpio_num, GPIO.LOW)
         
  
@@ -298,6 +299,7 @@ class BK_temp_controller_class(object):
         self.pid.sample_time=5
         self.running=False
         self.pid.proportional_on_measurement = False
+        GPIO.setup(self.gpio_num, GPIO.OUT)
         GPIO.output(self.gpio_num, GPIO.LOW)
 
     def stop(self):
