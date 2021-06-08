@@ -460,7 +460,7 @@ def gui():
     
     BK_temp_label = tk.Label(panel1, text=BK_temp,bg='black',font=("Helvetica", FontSize1),width=0,height=0,fg='orange')
     BK_temp_label.place (x=xBK,y=y1 )
-    BK_setpoint_label=label = tk.Label(panel1, text=str (BK_setpoint) + bk_controller_status.unit,bg='black',font=("Helvetica", FontSize2),width=0,height=0,fg='white')
+    BK_setpoint_label=label = tk.Label(panel1, text=str (BK_setpoint) + BK_controller_status.unit,bg='black',font=("Helvetica", FontSize2),width=0,height=0,fg='white')
     BK_setpoint_label.place (x=xBK,y=y2 )
     BK_controller_label = tk.Label(panel1, text='OFF',bg='black',font=("Helvetica", FontSize3),width=0,height=0,fg='white')
     BK_controller_label.place (x=xBK+xOffset2,y=y3 )
