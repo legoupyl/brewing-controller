@@ -525,7 +525,7 @@ def gui():
         
         MLT_controller_label.update()
         
-        if BK_controller.running:
+        if BK_temp_controller.running or BK_power_controller.running: 
             BK_controller_label.config (text='ON',fg='red')
         else:
             BK_controller_label.config (text='OFF',fg='white')
@@ -589,8 +589,8 @@ gui_thread = threading.Thread(target=gui)
 gui_thread.daemon=True
 gui_thread.start()
 time.sleep(1)
-BK_controller.running=False
-
+BK_power_controller.running=False
+BK_temp_controller.running=False
 
 while  True:
     time.sleep(1)
