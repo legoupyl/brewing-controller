@@ -148,7 +148,7 @@ def HLT_encoder_fnc():
     global MLT_temp_setpoint
     HLT_encoder = i2cEncoderLibV2.i2cEncoderLibV2(bus,HLT_encoder_cspin)
     HLT_encoder.begin(encconfig)
-    HLT_encoder.writeCounter(74)
+    HLT_encoder.writeCounter(66)
     HLT_encoder.writeMin(0)
     HLT_encoder.writeMax(100)
     HLT_encoder.writeStep(1)
@@ -193,7 +193,7 @@ def BK_encoder_fnc():
     global BK_setpoint
     BK_encoder = i2cEncoderLibV2.i2cEncoderLibV2(bus,BK_encoder_cspin)
     BK_encoder.begin(encconfig)
-    BK_encoder.writeCounter(100)
+    BK_encoder.writeCounter(75)
     BK_encoder.writeMin(0)
     BK_encoder.writeMax(100)
     BK_encoder.writeStep(1)
