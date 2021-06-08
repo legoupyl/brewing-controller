@@ -11,6 +11,7 @@ from simple_pid import PID
 import atexit
 from RPi import GPIO
 
+
 # set working directory do script directory
 os.chdir(os.path.dirname(os.path.realpath(__file__)))
 
@@ -56,6 +57,8 @@ BK_encoder_cspin=0x07
 
 
 
+
+
 # Just for variables init
 HLT_temp = 0
 MLT_temp = 0
@@ -74,6 +77,32 @@ def theEnd():
     print ("Goodbye !")
     GPIO.output(self.BK_heater_cspin, GPIO.LOW)
     GPIO.output(self.HLT_heater_cspin, GPIO.LOW)
+
+
+class BK_controller_status_class(object):
+    # CONFIG PARAMETER & PROPERTIES
+    def __init__(self,csPinValue):
+        self.mode = "temp"
+        self.unit = "C"
+
+    def toggle_mode(self):
+
+
+        if self.mode == "temp":
+            
+            print ("Toggle : Starting BK controller power mode" )
+            BK_temp_controller.stop()
+            self.mode = "power"
+            self.unit = "%"
+            
+
+        else:
+            print ("Toggle:  Stoping BK controller mode temp" )
+            BK_power_controller.stop()
+            self.mode = "temp"
+            self.unit = "C"
+        
+
 
 
 class PT100(object):
@@ -186,7 +215,13 @@ def BK_encoder_fnc():
             print ('Min!') 
         if ( BK_encoder.readStatus(i2cEncoderLibV2.PUSHP) and BK_encoder.readStatus(i2cEncoderLibV2.PUSHR)):
             print ("Button Pushed!")
-            BK_controller.toggle()
+            if (BK_controller_status.mode == "temp"):
+                BK_temp_controller.toggle()
+            if (BK_controller_status.mode == "power"):
+                BK_power_controller.toggle()
+
+
+
         if (BK_encoder.readStatus(i2cEncoderLibV2.PUSHP) and (BK_encoder.readStatus(i2cEncoderLibV2.PUSHR)==False)):
             print ("Ciao!")
             os.system('sudo shutdown now')
@@ -194,6 +229,7 @@ def BK_encoder_fnc():
             
         if BK_encoder.readStatus (i2cEncoderLibV2.PUSHD) == True:
             print ("Double Push")
+            BK_controller_status.toggle_mode()
 
             
         BK_setpoint=BK_encoder.readCounter32()
@@ -371,7 +407,7 @@ class MLT_controller_class(object):
         global HLT_temp_setpoint
         self.running = True
         print ("Running  MLT controller" )
-        while self.running == True:
+        while self.running == True :
             time.sleep (30)
             self.pid.setpoint=MLT_temp_setpoint
             self.power = self.pid(MLT_temp)
@@ -422,7 +458,7 @@ def gui():
     
     BK_temp_label = tk.Label(panel1, text=BK_temp,bg='black',font=("Helvetica", FontSize1),width=0,height=0,fg='orange')
     BK_temp_label.place (x=xBK,y=y1 )
-    BK_setpoint_label=label = tk.Label(panel1, text=str (BK_setpoint) + "%",bg='black',font=("Helvetica", FontSize2),width=0,height=0,fg='white')
+    BK_setpoint_label=label = tk.Label(panel1, text=str (BK_setpoint) + bk_controller_status.unit,bg='black',font=("Helvetica", FontSize2),width=0,height=0,fg='white')
     BK_setpoint_label.place (x=xBK,y=y2 )
     BK_controller_label = tk.Label(panel1, text='OFF',bg='black',font=("Helvetica", FontSize3),width=0,height=0,fg='white')
     BK_controller_label.place (x=xBK+xOffset2,y=y3 )
@@ -526,7 +562,10 @@ get_temp_thread.start()
 
 
 HLT_controller=HLT_controller_class()
-BK_controller=BK_temp_controller_class()
+BK_controller_status=BK_controller_status_class()
+BK_temp_controller=BK_temp_controller_class()
+BK_power_controller=BK_power_controller_class()
+
 MLT_controller=MLT_controller_class()
 
 time.sleep (1) #waiting controller initialization
